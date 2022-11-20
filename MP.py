@@ -5,6 +5,7 @@ import json
 import threading
 import cv2
 import mediapipe as mp
+import Settings as s
 
 
 class MP(threading.Thread):
@@ -26,8 +27,6 @@ class MP(threading.Thread):
         with mp_pose.Pose(
                 min_detection_confidence=0.8,
                 min_tracking_confidence=0.5) as pose:
-
-            print('HelloClient')
 
             #Create a UDP socket
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -73,7 +72,7 @@ class MP(threading.Thread):
                         message += new_j + "/"
 
                 jsonmessage = json.dumps(message).encode()
-                print("Sending a message...")
+                # print("Sending a message...")
                 sent = sock.sendto(jsonmessage, server_address)
 
                 # Draw the pose annotation on the image.
@@ -94,11 +93,12 @@ class MP(threading.Thread):
 
                 # time.sleep(10)
                 # Stop MediaPipe:
-                key = cv2.waitKey(1)
+                key = cv2.waitKey(1) #TODO change
                 if key == ord('q'):
                     break
 
             cap.release()
+            s.stop = True #TODO change/delete
 
 
 if __name__ == '__main__':
