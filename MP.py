@@ -16,13 +16,14 @@ class MP(threading.Thread):
 
     def run(self):
         print("MP START")
-        show = True
+        show = False
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
         mp_pose = mp.solutions.pose
 
-        cap = cv2.VideoCapture(2) # 0 - webcam, 2 - second USB in maya's computer
+        cap = cv2.VideoCapture(0) # 0 - webcam, 2 - second USB in maya's computer
         image_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float `width`
+        # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1680)
         image_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float `height`
         with mp_pose.Pose(
                 min_detection_confidence=0.8,
@@ -45,14 +46,14 @@ class MP(threading.Thread):
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 results = pose.process(image)
 
-                lm_dict={'nose': "0",
+                lm_dict = {'nose': "0",
                          'L_eye_inner': "1", 'L_eye': "2", "L_eye_outer": "3",
                          'R_eye_inner': "4", 'R_eye': "5", "R_eye_outer": "6",
                          'L_ear': "7", 'R_ear': "8", "L_mouth": "9","R_mouth": "10",
                          'L_Shoulder': "11", 'R_Shoulder': "12", 'L_Elbow': "13", 'R_Elbow': "14",
                          'L_Wrist': "15", 'R_Wrist': "16",
                          'L_pinky': "17", 'R_pinky': "18", 'L_index': "19", 'R_index': "20",
-                         'L_thumb': "21", 'R_thumb': "22", 'L_hip': "23", 'R_hip': "24"}
+                         'L_thumb': "21", 'R_thumb': "22", 'L_Hip': "23", 'R_Hip': "24"}
 
                 # 'L_knee': "25", 'R_knee': "26", 'L_ankle': "27", 'R_ankle': "28",
                 # 'L_heel': "29", 'R_heel': "30", 'L_foot_index': "31", 'R_foot_index': "32"}
@@ -94,11 +95,12 @@ class MP(threading.Thread):
                 # time.sleep(10)
                 # Stop MediaPipe:
                 key = cv2.waitKey(1) #TODO change
-                if key == ord('q'):
+                # if key == ord('q'):
+                if s.stop:
                     break
 
             cap.release()
-            s.stop = True #TODO change/delete
+            # s.stop = True #TODO change/delete
 
 
 if __name__ == '__main__':

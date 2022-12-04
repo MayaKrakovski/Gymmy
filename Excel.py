@@ -37,4 +37,5 @@ def wf_joints(ex_name, list_joints):
                 row += 1
         frame_number += 1
 
+def close_workbook():
     s.excel_workbook.close()
