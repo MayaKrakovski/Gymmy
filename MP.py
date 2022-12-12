@@ -16,7 +16,7 @@ class MP(threading.Thread):
 
     def run(self):
         print("MP START")
-        show = False
+        show = True
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
         mp_pose = mp.solutions.pose
@@ -104,6 +104,7 @@ class MP(threading.Thread):
 
 
 if __name__ == '__main__':
+    s.stop = False
     mediap = MP()
     mediap.start()
 

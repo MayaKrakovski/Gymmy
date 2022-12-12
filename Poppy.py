@@ -26,15 +26,35 @@ class Poppy(threading.Thread):
     def run(self):
         print("ROBOT START")
         while not s.stop:
+            time.sleep(0.00000001)  # Prevents the MP to stuck
             if s.req_exercise != "":
                 print("ROBOT: Exercise ", s.req_exercise, " start")
                 self.exercise_demo(s.req_exercise)
                 print("ROBOT: Exercise ", s.req_exercise, " done")
+                while not s.waved:
+                    time.sleep(0.000000001) # for hello_waiting exercise, wait until user wave
                 s.req_exercise = ""
 
     def exercise_demo(self, ex):
-        for i in range(s.rep):
-            getattr(self, ex)(i)
+        if ex == "hello_waving":
+            self.hello_waving()
+        else:
+            for i in range(s.rep):
+                getattr(self, ex)(i)
+
+    def hello_waving(self):
+        self.poppy.r_shoulder_x.goto_position(-90, 1.5, wait=False)
+        self.poppy.r_elbow_y.goto_position(-20, 1.5, wait=False)
+        self.poppy.r_arm_z.goto_position(-80, 1.5, wait=False)
+        for i in range(3):
+            self.poppy.r_arm[3].goto_position(-35, 0.6, wait=True)
+            self.poppy.r_arm[3].goto_position(35, 0.6, wait=True)
+        self.finish_waving()
+
+    def finish_waving(self):
+        self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False)
+        self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
+        self.poppy.r_arm_z.goto_position(0, 1.5, wait=False)
 
     # EX1 - Raise arms horizontally
     def raise_arms_horizontally(self, counter):
@@ -53,9 +73,10 @@ class Poppy(threading.Thread):
     def bend_elbows(self, counter):
         self.poppy.r_arm[3].goto_position(-60, 1.5, wait=False)
         self.poppy.l_arm[3].goto_position(-60, 1.5, wait=True)
-        time.sleep(0.5)
+        time.sleep(2)
         self.poppy.r_arm[3].goto_position(85, 1.5, wait=False)
         self.poppy.l_arm[3].goto_position(85, 1.5, wait=True)
+        time.sleep(2)
 
     # EX3 - Raise Arms Bend Elbows
     def raise_arms_bend_elbows(self, counter):
@@ -67,20 +88,20 @@ class Poppy(threading.Thread):
                   self.poppy.r_arm_z.goto_position(90, 2, wait=False),
                   self.poppy.r_shoulder_x.goto_position(-50, 2, wait=False),
                   self.poppy.r_elbow_y.goto_position(-50, 2, wait=False)]
-        time.sleep(3)
+        time.sleep(2)
         self.poppy.r_shoulder_x.goto_position(-85, 1.5, wait=False)
         self.poppy.l_shoulder_x.goto_position(95, 1.5, wait=False)
         self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
         self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
         if counter == s.rep-1:
-            # init
+            # return to init position
             self.poppy.l_arm_z.goto_position(0, 1.5, wait=False)
             self.poppy.r_arm_z.goto_position(0, 1.5, wait=False)
             self.poppy.l_shoulder_y.goto_position(0, 1.5, wait=False)
             self.poppy.r_shoulder_y.goto_position(0, 1.5, wait=True)
             self.poppy.l_shoulder_x.goto_position(0, 1.5, wait=False)
             self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False)
-            time.sleep(2)
+        time.sleep(2)
 
 if __name__ == "__main__":
     s.rep = 8

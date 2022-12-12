@@ -1,3 +1,5 @@
+import time
+
 import Settings as s
 from Camera import Camera
 from Poppy import Poppy
@@ -24,18 +26,20 @@ if __name__ == '__main__':
     s.exercise_amount = 6
     s.rep = 8
     s.req_exercise = ""
+    s.stop = False
+    s.waved = False
 
-    # Create all components threads
+    # Create all components
     Excel.create_workbook()
     s.camera = Camera()
-    training = Training()
-    # s.audio = Audio()
-    s.stop = False
+    s.training = Training()
     s.robot = Poppy()
+    # TODO add screen
 
     # Start all threads
     s.camera.start()
-    training.start()
-    # s.audio.start()
+    # time.sleep(10) #let the camera start
+    s.training.start()
     s.robot.start()
+    # TODO add screen
 

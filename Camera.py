@@ -2,6 +2,8 @@ import threading
 import socket
 import json
 import math
+import time
+
 import numpy as np
 from statistics import mean, stdev
 
@@ -165,7 +167,21 @@ class Camera(threading.Thread):
 
     def raise_arms_bend_elbows(self):
         self.exercise_two_angles("raise_arms_bend_elbows", "Elbow", "Shoulder", "Wrist", 130, 180, 5, 35,
-                                   "Shoulder", "Hip", "Elbow", 70, 120, 70, 120)
+                                 "Shoulder", "Hip", "Elbow", 70, 120, 70, 120)
+
+    def hello_waving(self): # check if the participant waved
+        time.sleep(8)
+        say('ready wave')
+        while s.req_exercise == "hello_waving":
+            joints = self.get_skeleton_data()
+            if joints is not None:
+                right_shoulder = joints[str("R_Shoulder")]
+                right_wrist = joints[str("R_Wrist")]
+                if right_shoulder.y < right_wrist.y != 0:
+                    print(right_shoulder.y)
+                    print(right_wrist.y)
+                    s.waved = True
+                    s.req_exercise = ""
 
     def check_angle_range(self, joint1, joint2, joint3):
         # just for coding and understanding angle boundaries
@@ -188,25 +204,18 @@ class Camera(threading.Thread):
         print ("CAMERA START")
         medaip = MP()
         medaip.start()
-        joint_data_excel = []
-        # self.init_position()
-        # self.check_angle_range("Shoulder", "Hip", "Wrist")
-
-        # self.raise_arms_horizontally()
-        # self.bend_elbows()
-        # self.raise_arms_bend_elbows()
-        # s.stop = True
-
-        # Excel.close_workbook()
 
         while not s.stop:
+            time.sleep(0.00000001)  # Prevents the MP to stuck
             if s.req_exercise != "":
                 print("CAMERA: Exercise ", s.req_exercise, " start")
                 getattr(self, s.req_exercise)()
                 print("CAMERA: Exercise ", s.req_exercise, " done")
-                # s.req_exercise = ""
+                s.req_exercise = ""
 
 if __name__ == '__main__':
+    s.stop = False
+    s.req_exercise = ""
     print('HelloServer')
     c = Camera()
     c.start()

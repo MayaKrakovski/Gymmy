@@ -11,6 +11,18 @@ class Training(threading.Thread):
 
     def run(self):
         print("TRAINING START")
+        self.run_exercise("hello_waving")
+        print("Training: start waving")
+        while not s.waved:
+            time.sleep(0.00000001)  # Prevents the MP to stuck
+            continue
+        say('lets start')
+        time.sleep(2)
+        print("Training: finish waving")
+        self.training_session()
+
+    def training_session(self):
+        print ("Training: start exercises")
         exercise_names = ["raise_arms_horizontally", "bend_elbows", "raise_arms_bend_elbows"]
         for e in exercise_names:
             self.run_exercise(e)
@@ -25,7 +37,7 @@ class Training(threading.Thread):
         s.req_exercise = name
         say(name)
         while s.req_exercise == name:
-            continue
+            time.sleep(0.00000001)  # Prevents the MP to stuck
         print("TRAINING: Exercise ", name, " done")
 
 
