@@ -2,6 +2,7 @@ import threading
 import time
 import Settings as s
 import Excel
+import random
 from Audio import say
 
 
@@ -22,7 +23,7 @@ class Training(threading.Thread):
         self.training_session()
 
     def training_session(self):
-        print ("Training: start exercises")
+        print("Training: start exercises")
         exercise_names = ["raise_arms_horizontally", "bend_elbows", "raise_arms_bend_elbows"]
         for e in exercise_names:
             self.run_exercise(e)
@@ -33,13 +34,20 @@ class Training(threading.Thread):
         print("TRAINING DONE")
 
     def run_exercise(self, name):
+        s.success_exercise = False
         print("TRAINING: Exercise ", name, " start")
         s.req_exercise = name
         say(name)
+        time.sleep(3)  # Delay the robot movement after the audio is played
         while s.req_exercise == name:
             time.sleep(0.00000001)  # Prevents the MP to stuck
+        if s.success_exercise:
+            say(self.random_encouragement())
         print("TRAINING: Exercise ", name, " done")
 
+    def random_encouragement(self):
+        enco = ["well done", "very good", "excellent"]
+        return random.choice(enco)
 
 if __name__ == "__main__":
     t = Training()

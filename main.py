@@ -28,6 +28,7 @@ if __name__ == '__main__':
     s.req_exercise = ""
     s.stop = False
     s.waved = False
+    s.success_exercise = False
 
     # Create all components
     Excel.create_workbook()

@@ -103,7 +103,7 @@ class Camera(threading.Thread):
         flag = True
         counter = 0
         list_joints = []
-        while  s.req_exercise == exercise_name:
+        while s.req_exercise == exercise_name:
             joints = self.get_skeleton_data()
             if joints is not None:
                 right_angle = self.calc_angle(joints[str("R_"+joint1)], joints[str("R_"+joint2)],
@@ -130,6 +130,10 @@ class Camera(threading.Thread):
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & \
                             (down_lb2 < right_angle2 < down_ub2) & (down_lb2 < left_angle2 < down_ub2) &(flag):
                         flag = False
+            if counter == s.rep:
+                s.req_exercise = ""
+                s.success_exercise = True
+                break
 
         Excel.wf_joints("ex", list_joints)
 
@@ -156,6 +160,10 @@ class Camera(threading.Thread):
                         say(str(counter))
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & (flag):
                         flag = False
+            if counter == s.rep:
+                s.req_exercise = ""
+                s.success_exercise = True
+                break
 
         Excel.wf_joints("ex", list_joints)
 
