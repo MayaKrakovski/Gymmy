@@ -20,15 +20,16 @@ if __name__ == '__main__':
     language = 'Hebrew'
     gender = 'Female'
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
-    s.str_to_say = ""
+    # s.str_to_say = ""
 
     # Training variables initialization
     s.exercise_amount = 6
     s.rep = 8
     s.req_exercise = ""
-    s.stop = False
+    s.finish_workout = False
     s.waved = False
     s.success_exercise = False
+    s.calibration = False
 
     # Create all components
     Excel.create_workbook()
@@ -39,7 +40,6 @@ if __name__ == '__main__':
 
     # Start all threads
     s.camera.start()
-    # time.sleep(10) #let the camera start
     s.training.start()
     s.robot.start()
     # TODO add screen

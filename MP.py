@@ -92,15 +92,12 @@ class MP(threading.Thread):
                 if show:
                     cv2.imshow('MediaPipe Pose', cv2.flip(image, 1))
 
-                # time.sleep(10)
                 # Stop MediaPipe:
                 key = cv2.waitKey(1) #TODO change
-                # if key == ord('q'):
-                if s.stop:
+                if s.finish_workout or key == ord('q'):
                     break
 
             cap.release()
-            # s.stop = True #TODO change/delete
 
 
 if __name__ == '__main__':

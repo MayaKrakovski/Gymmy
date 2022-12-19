@@ -1,16 +1,22 @@
 def __init__():
 
-    # threads classes pointers
+    # classes pointers
+    global training
     global camera
-    global audio
+    global robot
 
     global excel_workbook
 
     # training variables
-    global stop
+    global exercise_amount
+    global rep
+    global req_exercise
+    global finish_workout
+    global waved
+    global success_exercise
+    global calibration
 
     # audio variables
     global audio_path
-    global str_to_say
 
     global camera_num

@@ -12,7 +12,7 @@ class Audio(threading.Thread):
         print ("AUDIO INITIALIZATION")
 
     def run(self):
-        while not s.stop:
+        while not s.finish_workout:
             if s.str_to_say!="":
                 self.say_no_wait(s.str_to_say)
                 print("tts says: ", s.str_to_say)
@@ -22,6 +22,7 @@ class Audio(threading.Thread):
     def say1(self, str_to_say):
         if (str_to_say != ""):
             winsound.PlaySound(s.audio_path+str_to_say+'.wav', winsound.SND_FILENAME)
+
 
 def say(str_to_say):
     '''

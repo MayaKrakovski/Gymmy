@@ -66,6 +66,7 @@ class Camera(threading.Thread):
             else:  # skeleton is not recognized in frame
                 print("user is not recognized")
         say("calibration_complete")
+        s.calibration = True
         print("CAMERA: init position verified")
 
     def calc_angle(self, joint1, joint2, joint3):
@@ -194,7 +195,7 @@ class Camera(threading.Thread):
     def check_angle_range(self, joint1, joint2, joint3):
         # just for coding and understanding angle boundaries
         list_joints = []
-        while not s.stop:
+        while not s.finish_workout:
             joints = self.get_skeleton_data()
             if joints is not None:
                 right_angle = self.calc_angle(joints[str("R_"+joint1)], joints[str("R_"+joint2)],
@@ -213,7 +214,7 @@ class Camera(threading.Thread):
         medaip = MP()
         medaip.start()
 
-        while not s.stop:
+        while not s.finish_workout:
             time.sleep(0.00000001)  # Prevents the MP to stuck
             if s.req_exercise != "":
                 print("CAMERA: Exercise ", s.req_exercise, " start")
@@ -221,8 +222,9 @@ class Camera(threading.Thread):
                 print("CAMERA: Exercise ", s.req_exercise, " done")
                 s.req_exercise = ""
 
+
 if __name__ == '__main__':
-    s.stop = False
+    s.finish_workout = False
     s.req_exercise = ""
     print('HelloServer')
     c = Camera()

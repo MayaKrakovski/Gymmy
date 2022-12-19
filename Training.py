@@ -17,10 +17,17 @@ class Training(threading.Thread):
         while not s.waved:
             time.sleep(0.00000001)  # Prevents the MP to stuck
             continue
+        print("Training: Calibration")
+        s.camera.init_position()
+        while not s.calibration:
+            time.sleep(0.00000001)
+            continue
+        time.sleep(3)
         say('lets start')
         time.sleep(2)
         print("Training: finish waving")
         self.training_session()
+        self.finish_workout()
 
     def training_session(self):
         print("Training: start exercises")
@@ -29,7 +36,10 @@ class Training(threading.Thread):
             self.run_exercise(e)
             time.sleep(1)
 
-        s.stop = True
+    def finish_workout(self):
+        say('goodbye')
+        s.finish_workout = True
+        # TODO add sheet of success in exercises
         Excel.close_workbook()
         print("TRAINING DONE")
 

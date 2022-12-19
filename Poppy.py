@@ -105,6 +105,6 @@ class Poppy(threading.Thread):
 
 if __name__ == "__main__":
     s.rep = 8
-    s.stop = False
+    s.finish_workout = False
     robot = Poppy()
     robot.start()
