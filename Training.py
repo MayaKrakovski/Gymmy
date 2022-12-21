@@ -31,6 +31,7 @@ class Training(threading.Thread):
 
     def training_session(self):
         print("Training: start exercises")
+        # TODO - adding random choice of exercises.
         exercise_names = ["raise_arms_horizontally", "bend_elbows", "raise_arms_bend_elbows"]
         for e in exercise_names:
             self.run_exercise(e)
@@ -39,7 +40,7 @@ class Training(threading.Thread):
     def finish_workout(self):
         say('goodbye')
         s.finish_workout = True
-        # TODO add sheet of success in exercises
+        Excel.success_worksheet()
         Excel.close_workbook()
         print("TRAINING DONE")
 
@@ -58,6 +59,7 @@ class Training(threading.Thread):
     def random_encouragement(self):
         enco = ["well done", "very good", "excellent"]
         return random.choice(enco)
+
 
 if __name__ == "__main__":
     t = Training()

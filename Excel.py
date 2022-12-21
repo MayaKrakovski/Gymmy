@@ -37,5 +37,15 @@ def wf_joints(ex_name, list_joints):
                 row += 1
         frame_number += 1
 
+
+def success_worksheet():
+    row = 1
+    col = 0
+    s.worksheet = s.excel_workbook.add_worksheet("success")
+    for ex in s.ex_list:
+        s.worksheet.write(row, col, ex[0])
+        s.worksheet.write(row, col+1, ex[1])
+
+
 def close_workbook():
     s.excel_workbook.close()

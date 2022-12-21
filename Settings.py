@@ -4,6 +4,7 @@ def __init__():
     global training
     global camera
     global robot
+    global screen
 
     global excel_workbook
 
@@ -18,5 +19,8 @@ def __init__():
 
     # audio variables
     global audio_path
+
+    # screen variables
+    global picture_path
 
     global camera_num
