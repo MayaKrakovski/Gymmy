@@ -35,7 +35,7 @@ class Training(threading.Thread):
         exercise_names = ["raise_arms_horizontally", "bend_elbows", "raise_arms_bend_elbows"]
         for e in exercise_names:
             self.run_exercise(e)
-            time.sleep(1)
+            time.sleep(3)
 
     def finish_workout(self):
         say('goodbye')

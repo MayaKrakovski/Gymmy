@@ -32,7 +32,7 @@ class Poppy(threading.Thread):
                 self.exercise_demo(s.req_exercise)
                 print("ROBOT: Exercise ", s.req_exercise, " done")
                 while not s.waved:
-                    time.sleep(0.000000001) # for hello_waiting exercise, wait until user wave
+                    time.sleep(0.000000001)  # for hello_waiting exercise, wait until user wave
                 s.req_exercise = ""
 
     def exercise_demo(self, ex):
@@ -41,6 +41,8 @@ class Poppy(threading.Thread):
         else:
             for i in range(s.rep):
                 getattr(self, ex)(i)
+                if s.success_exercise:
+                    break
 
     def hello_waving(self):
         self.poppy.r_shoulder_x.goto_position(-90, 1.5, wait=False)
