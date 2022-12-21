@@ -165,6 +165,7 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
+        s.ex_list.append([exercise_name, counter])
 
         Excel.wf_joints("ex", list_joints)
 

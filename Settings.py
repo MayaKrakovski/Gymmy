@@ -7,7 +7,7 @@ def __init__():
     global screen
 
     global excel_workbook
-
+    global ex_list
     # training variables
     global exercise_amount
     global rep

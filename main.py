@@ -33,8 +33,11 @@ if __name__ == '__main__':
     s.success_exercise = False
     s.calibration = False
 
-    # Create all components
+    # Excel variable
     Excel.create_workbook()
+    s.ex_list = []
+
+    # Create all components
     s.camera = Camera()
     s.training = Training()
     s.robot = Poppy()
