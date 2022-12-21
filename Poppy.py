@@ -25,7 +25,7 @@ class Poppy(threading.Thread):
 
     def run(self):
         print("ROBOT START")
-        while not s.stop:
+        while not s.finish_workout:
             time.sleep(0.00000001)  # Prevents the MP to stuck
             if s.req_exercise != "":
                 print("ROBOT: Exercise ", s.req_exercise, " start")
