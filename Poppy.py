@@ -19,7 +19,7 @@ class Poppy(threading.Thread):
         for m in self.poppy.motors:
             if not m.name == 'r_elbow_y' and not m.name == 'l_elbow_y' and not m.name == 'head_y':
                 m.goto_position(0, 1, wait=True)
-        self.poppy.head_y.goto_position(-20,1,wait=True)
+        self.poppy.head_y.goto_position(-20, 1, wait=True)
         self.poppy.r_elbow_y.goto_position(90, 1, wait=True)
         self.poppy.l_elbow_y.goto_position(90, 1, wait=True)
 
@@ -34,6 +34,7 @@ class Poppy(threading.Thread):
                 while not s.waved:
                     time.sleep(0.000000001)  # for hello_waiting exercise, wait until user wave
                 s.req_exercise = ""
+        print("Robot Done")
 
     def exercise_demo(self, ex):
         if ex == "hello_waving":
@@ -95,7 +96,7 @@ class Poppy(threading.Thread):
         self.poppy.l_shoulder_x.goto_position(95, 1.5, wait=False)
         self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
         self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
-        if counter == s.rep-1:
+        if counter == s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
             # return to init position
             self.poppy.l_arm_z.goto_position(0, 1.5, wait=False)
             self.poppy.r_arm_z.goto_position(0, 1.5, wait=False)
@@ -104,6 +105,7 @@ class Poppy(threading.Thread):
             self.poppy.l_shoulder_x.goto_position(0, 1.5, wait=False)
             self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False)
         time.sleep(2)
+
 
 if __name__ == "__main__":
     s.rep = 8

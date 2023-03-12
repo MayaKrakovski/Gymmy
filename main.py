@@ -1,12 +1,12 @@
 import time
-
 import Settings as s
+import Excel
 from Camera import Camera
 from Poppy import Poppy
 from Audio import Audio
 from Training import Training
 from Screen import Screen, FullScreenApp
-import Excel
+from PIL import Image, ImageTk
 
 
 def print_hi(name):
@@ -47,8 +47,8 @@ if __name__ == '__main__':
     s.training.start()
     s.robot.start()
     s.screen = Screen()
-    # image1 = Image.open('Pictures//icon.jpg')
-    # s.screen.tk.call('wm', 'iconphoto', s.screen._w, ImageTk.PhotoImage(image1))
+    image1 = Image.open('Pictures//icon.jpg')
+    s.screen.tk.call('wm', 'iconphoto', s.screen._w, ImageTk.PhotoImage(image1))
     app = FullScreenApp(s.screen)
     s.screen.mainloop()
 

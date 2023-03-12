@@ -222,6 +222,7 @@ class Camera(threading.Thread):
                 getattr(self, s.req_exercise)()
                 print("CAMERA: Exercise ", s.req_exercise, " done")
                 s.req_exercise = ""
+        print("Camera Done")
 
 
 if __name__ == '__main__':

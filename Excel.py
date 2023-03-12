@@ -6,8 +6,8 @@ from Joint import Joint
 
 def create_workbook():
     current_time = datetime.datetime.now()
-    workbook_name = str(current_time.day) + "." + str(current_time.month) + " " + str(current_time.hour) + "." + \
-                     str(current_time.minute) + "." + str(current_time.second) + ".xlsx"
+    workbook_name = str(current_time.day) + "." + str(current_time.month) + " " + str(current_time.hour) + "." +\
+        str(current_time.minute) + "." + str(current_time.second) + ".xlsx"
     s.excel_workbook = xlsxwriter.Workbook(workbook_name)
 
 

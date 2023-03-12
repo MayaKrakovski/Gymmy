@@ -104,6 +104,7 @@ if __name__ == '__main__':
     s.stop = False
     mediap = MP()
     mediap.start()
+    s.finish_workout = False
 
 
 
