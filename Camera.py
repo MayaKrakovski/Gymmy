@@ -23,7 +23,7 @@ class Camera(threading.Thread):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = ('localhost', 7000)
         self.sock.bind(self.server_address)
-        print ("CAMERA INITIALIZATION")
+        print("CAMERA INITIALIZATION")
 
     def get_skeleton_data(self):
         self.sock.settimeout(1)
@@ -89,15 +89,15 @@ class Camera(threading.Thread):
         radians = np.arctan2(c[1]-b[1], c[0]-b[0]) - np.arctan2(a[1]-b[1], a[0]-b[0])
         angle = np.abs(radians*180.0/np.pi)
 
-        if angle >180.0:
+        if angle > 180.0:
             angle = 360-angle
 
         return round(angle,2)
 
     def calc_dist(self, joint1, joint2):
-            distance = math.hypot(joint1.x - joint2.x,
-                                  joint1.y - joint2.y)
-            return distance
+        distance = math.hypot(joint1.x - joint2.x,
+                              joint1.y - joint2.y)
+        return distance
 
     def exercise_two_angles(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub,
                             joint4, joint5, joint6, up_lb2, up_ub2, down_lb2, down_ub2):
@@ -165,8 +165,8 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
+        print(list_joints)
         s.ex_list.append([exercise_name, counter])
-
         Excel.wf_joints("ex", list_joints)
 
     def raise_arms_horizontally(self):
@@ -226,8 +226,14 @@ class Camera(threading.Thread):
 
 
 if __name__ == '__main__':
+    language = 'Hebrew'
+    gender = 'Female'
+    s.audio_path = 'audio files/' + language + '/' + gender + '/'
     s.finish_workout = False
-    s.req_exercise = ""
+    s.rep = 8
+    s.req_exercise = "bend_elbows"
+    Excel.create_workbook()
+    s.ex_list = []
     print('HelloServer')
     c = Camera()
     c.start()

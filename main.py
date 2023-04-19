@@ -7,12 +7,15 @@ from Audio import Audio
 from Training import Training
 from Screen import Screen, FullScreenApp
 from PIL import Image, ImageTk
+import pickle
 
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
+# TODO add more exercises
+# TODO adaptive framework
+# TODO GUI
 
 if __name__ == '__main__':
     s.camera_num = 0  # 0 - webcam, 2 - second USB in maya's computer
@@ -41,6 +44,12 @@ if __name__ == '__main__':
     s.camera = Camera()
     s.training = Training()
     s.robot = Poppy()
+
+    # Adaptation variables
+    s.adaptive = False
+    if s.adaptive:
+        adaptation_model_name = 'model2'
+        s.adaptation_model = pickle.load(open(f'{adaptation_model_name}.sav', 'rb'))
 
     # Start all threads
     s.camera.start()

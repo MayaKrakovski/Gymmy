@@ -50,7 +50,7 @@ class Training(threading.Thread):
         print("TRAINING: Exercise ", name, " start")
         s.req_exercise = name
         say(name)
-        time.sleep(7)  # Delay the robot movement after the audio is played
+        time.sleep(10)  # Delay the robot movement after the audio is played
         while s.req_exercise == name:
             time.sleep(0.00000001)  # Prevents the MP to stuck
         if s.success_exercise:

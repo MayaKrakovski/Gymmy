@@ -8,6 +8,7 @@ def __init__():
 
     global excel_workbook
     global ex_list
+
     # training variables
     global exercise_amount
     global rep
@@ -24,3 +25,7 @@ def __init__():
     global picture_path
 
     global camera_num
+
+    # adaptation
+    global adaptation_model
+    global adaptive
