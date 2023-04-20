@@ -29,3 +29,4 @@ def __init__():
     # adaptation
     global adaptation_model
     global adaptive
+    global performance_class

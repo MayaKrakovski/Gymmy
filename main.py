@@ -46,10 +46,11 @@ if __name__ == '__main__':
     s.robot = Poppy()
 
     # Adaptation variables
-    s.adaptive = False
+    s.adaptive = True
     if s.adaptive:
-        adaptation_model_name = 'model2'
-        s.adaptation_model = pickle.load(open(f'{adaptation_model_name}.sav', 'rb'))
+        s.adaptation_model_name = 'model2'
+        s.performance_class = {}
+        # s.adaptation_model = pickle.load(open(f'{adaptation_model_name}.sav', 'rb'))
 
     # Start all threads
     s.camera.start()

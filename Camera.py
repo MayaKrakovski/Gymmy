@@ -3,7 +3,7 @@ import socket
 import json
 import math
 import time
-
+import pandas as pd
 import numpy as np
 from statistics import mean, stdev
 
@@ -13,7 +13,7 @@ from Joint import Joint
 import Settings as s
 import Excel
 from Audio import say
-
+from performance_classification import feature_extraction, predict_performance
 
 class Camera(threading.Thread):
 
@@ -135,8 +135,10 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-
-        Excel.wf_joints("ex", list_joints)
+        if s.adaptive:
+            self.classify_performance(list_joints, exercise_name, 12, 13)
+        s.ex_list.append([exercise_name, counter])
+        Excel.wf_joints(exercise_name, list_joints)
 
     def exercise_one_angle(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub):
         flag = True
@@ -165,9 +167,11 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-        print(list_joints)
+        if s.adaptive:
+            self.classify_performance(list_joints, exercise_name, 6, 7)
         s.ex_list.append([exercise_name, counter])
-        Excel.wf_joints("ex", list_joints)
+        Excel.wf_joints(exercise_name, list_joints)
+
 
     def raise_arms_horizontally(self):
         self.exercise_one_angle("raise_arms_horizontally", "Shoulder", "Hip", "Wrist", 80, 105, 5, 30)
@@ -210,6 +214,19 @@ class Camera(threading.Thread):
         print(mean(list_joints))
         print(stdev(list_joints))
 
+    def classify_performance(self, list_joints, exercise_name, indexangleright, indexangleleft):
+        df = pd.DataFrame([sublist[indexangleright:indexangleleft+1] for sublist in list_joints]).T # angles are in the indexangleright and indexangleleft indexs
+        right_hand_data = df.iloc[0]
+        right_hand_data = right_hand_data.dropna().to_numpy()
+        left_hand_data = df.iloc[1]
+        left_hand_data = left_hand_data.dropna().to_numpy()
+
+        features = feature_extraction(right_hand_data, left_hand_data)
+        exercise = exercise_name
+        predictions = predict_performance(features, exercise, s.adaptation_model_name)
+        s.performance_class[exercise] = predictions
+        print(s.performance_class)
+
     def run(self):
         print ("CAMERA START")
         medaip = MP()
@@ -231,9 +248,14 @@ if __name__ == '__main__':
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
     s.finish_workout = False
     s.rep = 8
-    s.req_exercise = "bend_elbows"
+    s.req_exercise = "raise_arms_bend_elbows"
     Excel.create_workbook()
     s.ex_list = []
+    s.adaptive = True
+    if s.adaptive:
+        s.adaptation_model_name = 'model2'
+        s.performance_class = {}
     print('HelloServer')
     c = Camera()
     c.start()
+

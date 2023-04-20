@@ -230,6 +230,7 @@ def predict_performance(features, exercise_name, model_name):
     model_features = model.model.data.xnames
     X_test = features_scaled[model_features]
     predictions = model.predict(X_test)
+    print(predictions)
     predictions = list(map(round, predictions))
     print(predictions)
     return predictions
