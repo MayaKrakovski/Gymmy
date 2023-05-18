@@ -82,17 +82,20 @@ class Camera(threading.Thread):
             print("could not calculate the angle")
 
     def calc_angle2(self, joint1, joint2, joint3):
-        a = np.array([joint1.x, joint1.y]) # First
-        b = np.array([joint2.x, joint2.y]) # Mid
-        c = np.array([joint3.x, joint3.y]) # End
+        a = np.array([joint1.x, joint1.y,  joint1.z]) # First
+        b = np.array([joint2.x, joint2.y, joint2.z]) # Mid
+        c = np.array([joint3.x, joint3.y, joint3.z]) # End
 
-        radians = np.arctan2(c[1]-b[1], c[0]-b[0]) - np.arctan2(a[1]-b[1], a[0]-b[0])
-        angle = np.abs(radians*180.0/np.pi)
+        ba = a - b
+        bc = c - b
+        try:
+            cosine_angle = np.dot(ba, bc) / (np.linalg.norm(ba) * np.linalg.norm(bc))
+            angle = np.arccos(cosine_angle)
+            return round(np.degrees(angle),2)
 
-        if angle > 180.0:
-            angle = 360-angle
-
-        return round(angle,2)
+        except:
+            # pass
+            print("could not calculate the angle")
 
     def calc_dist(self, joint1, joint2):
         distance = math.hypot(joint1.x - joint2.x,
@@ -183,6 +186,10 @@ class Camera(threading.Thread):
         self.exercise_two_angles("raise_arms_bend_elbows", "Elbow", "Shoulder", "Wrist", 130, 180, 5, 35,
                                  "Shoulder", "Hip", "Elbow", 70, 120, 70, 120)
 
+    def open_and_close_arms_90(self):
+        self.exercise_two_angles("open_and_close_arms_90", "Shoulder", "Hip", "Wrist", 80, 105, 80, 105,
+                                 "Shoulder", "Hip", "Elbow", 70, 120, 70, 120)
+
     def hello_waving(self): # check if the participant waved
         time.sleep(8)
         say('ready wave')
@@ -200,19 +207,30 @@ class Camera(threading.Thread):
     def check_angle_range(self, joint1, joint2, joint3):
         # just for coding and understanding angle boundaries
         list_joints = []
+        medaip = MP()
+        medaip.start()
+        s.finish_workout = False
         while not s.finish_workout:
             joints = self.get_skeleton_data()
             if joints is not None:
-                right_angle = self.calc_angle(joints[str("R_"+joint1)], joints[str("R_"+joint2)],
+                right_angle = self.calc_angle(joints[str("R_"+joint1)], joints[str("L_"+joint2)],
                                               joints[str("R_"+joint3)])
                 left_angle = self.calc_angle(joints[str("L_"+joint1)], joints[str("L_"+joint2)],
                                              joints[str("L_"+joint3)])
+                right_angle2 = self.calc_angle2(joints[str("L_"+joint1)], joints[str("R_"+joint2)],
+                                              joints[str("R_"+joint3)])
+                left_angle2 = self.calc_angle2(joints[str("R_"+joint1)], joints[str("L_"+joint2)],
+                                             joints[str("L_"+joint3)])
+                print(right_angle2)
+                print(left_angle2)
                 if right_angle is not None and left_angle is not None:
                     list_joints.append(right_angle)
                     list_joints.append(left_angle)
         print(list_joints)
         print(mean(list_joints))
         print(stdev(list_joints))
+
+        #170 +- 11
 
     def classify_performance(self, list_joints, exercise_name, indexangleright, indexangleleft):
         df = pd.DataFrame([sublist[indexangleright:indexangleleft+1] for sublist in list_joints]).T # angles are in the indexangleright and indexangleleft indexs
@@ -225,7 +243,7 @@ class Camera(threading.Thread):
         exercise = exercise_name
         predictions = predict_performance(features, exercise, s.adaptation_model_name)
         s.performance_class[exercise] = predictions
-        print(s.performance_class)
+        print(f"CAMERA: performance classification {s.performance_class}")
 
     def run(self):
         print ("CAMERA START")
@@ -243,19 +261,26 @@ class Camera(threading.Thread):
 
 
 if __name__ == '__main__':
-    language = 'Hebrew'
-    gender = 'Female'
-    s.audio_path = 'audio files/' + language + '/' + gender + '/'
-    s.finish_workout = False
-    s.rep = 8
-    s.req_exercise = "raise_arms_bend_elbows"
-    Excel.create_workbook()
-    s.ex_list = []
-    s.adaptive = True
-    if s.adaptive:
-        s.adaptation_model_name = 'model2'
-        s.performance_class = {}
-    print('HelloServer')
-    c = Camera()
-    c.start()
+    check = True
+    if check:
+        c = Camera()
+        # c.check_angle_range("Elbow", "Shoulder", "Wrist")
+        c.check_angle_range("Shoulder", "Shoulder", "Elbow")
+
+    else:
+        language = 'Hebrew'
+        gender = 'Female'
+        s.audio_path = 'audio files/' + language + '/' + gender + '/'
+        s.finish_workout = False
+        s.rep = 8
+        s.req_exercise = "raise_arms_bend_elbows"
+        Excel.create_workbook()
+        s.ex_list = []
+        s.adaptive = True
+        if s.adaptive:
+            s.adaptation_model_name = 'model2'
+            s.performance_class = {}
+        print('HelloServer')
+        c = Camera()
+        c.start()
 

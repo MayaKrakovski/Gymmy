@@ -26,8 +26,20 @@ class Training(threading.Thread):
         say('lets start')
         time.sleep(2)
         print("Training: finish waving")
-        self.training_session()
+
+        if s.adaptive:
+            self.adatpive_training_session()
+        else:
+            self.training_session()
+
         self.finish_workout()
+
+    def adatpive_training_session(self):
+        self.training_session()
+        # exercise_names = ["raise_arms_horizontally", "bend_elbows"]
+        # for e in exercise_names:
+        #     self.run_exercise(e)
+        #     time.sleep(5)
 
     def training_session(self):
         print("Training: start exercises")
@@ -42,6 +54,7 @@ class Training(threading.Thread):
         s.finish_workout = True
         Excel.success_worksheet()
         Excel.close_workbook()
+        time.sleep(10)
         s.screen.quit()
         print("TRAINING DONE")
 
@@ -53,7 +66,7 @@ class Training(threading.Thread):
         time.sleep(10)  # Delay the robot movement after the audio is played
         while s.req_exercise == name:
             time.sleep(0.00000001)  # Prevents the MP to stuck
-        if s.success_exercise:
+        if s.success_exercise: # TODO change for adaptive training
             say(self.random_encouragement())
         print("TRAINING: Exercise ", name, " done")
 

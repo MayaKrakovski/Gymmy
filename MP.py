@@ -95,6 +95,7 @@ class MP(threading.Thread):
                 # Stop MediaPipe:
                 key = cv2.waitKey(1) #TODO change
                 if s.finish_workout or key == ord('q'):
+                    s.finish_workout = True
                     break
 
             cap.release()
