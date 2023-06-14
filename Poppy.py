@@ -28,6 +28,7 @@ class Poppy(threading.Thread):
         while not s.finish_workout:
             time.sleep(0.00000001)  # Prevents the MP to stuck
             if s.req_exercise != "":
+                time.sleep(3)
                 print("ROBOT: Exercise ", s.req_exercise, " start")
                 self.exercise_demo(s.req_exercise)
                 print("ROBOT: Exercise ", s.req_exercise, " done")
@@ -106,7 +107,25 @@ class Poppy(threading.Thread):
             self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False)
         time.sleep(2)
 
-    # EX4 - open and close arms 90
+    # Ex4 - open and close arms
+    def open_and_close_arms(self, counter):
+        if counter == 0:
+            self.poppy.l_shoulder_y.goto_position(-90, 2, wait=False)
+            self.poppy.r_shoulder_y.goto_position(-90, 2, wait=False)
+        self.poppy.r_shoulder_x.goto_position(-85, 1.5, wait=False)
+        self.poppy.l_shoulder_x.goto_position(95, 1.5, wait=False)
+        # self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
+        # self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
+        time.sleep(0.5)
+        self.poppy.l_shoulder_x.goto_position(0, 2, wait=False)
+        self.poppy.r_shoulder_x.goto_position(0, 2, wait=True)
+        if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
+            self.poppy.l_shoulder_y.goto_position(0, 2, wait=False)
+            self.poppy.r_shoulder_y.goto_position(0, 2, wait=False)
+            self.poppy.l_shoulder_x.goto_position(0, 2, wait=False)
+            self.poppy.r_shoulder_x.goto_position(0, 2, wait=True)
+
+# EX5 - open and close arms 90
     def open_and_close_arms_90(self, counter):
         if counter == 0:
             self.poppy.l_shoulder_y.goto_position(-90, 1.5, wait=False)
@@ -120,12 +139,12 @@ class Poppy(threading.Thread):
         self.poppy.r_shoulder_x.goto_position(0, 1, wait=True)
         time.sleep(0.5)
         if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
-            robot.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
-            robot.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
-            robot.poppy.l_shoulder_y.goto_position(0, 1.5, wait=False)
-            robot.poppy.r_shoulder_y.goto_position(0, 1.5, wait=True)
-            robot.poppy.l_shoulder_x.goto_position(0, 1.5, wait=False)
-            robot.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False)
+            self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
+            self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
+            self.poppy.l_shoulder_y.goto_position(0, 1.5, wait=False)
+            self.poppy.r_shoulder_y.goto_position(0, 1.5, wait=True)
+            self.poppy.l_shoulder_x.goto_position(0, 1.5, wait=False)
+            self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False)
 
 
 if __name__ == "__main__":
@@ -134,7 +153,7 @@ if __name__ == "__main__":
     s.finish_workout = False
     robot = Poppy()
 
-    robot.exercise_demo("open_and_close_arms_90")
+    robot.exercise_demo("open_and_close_arms")
     # robot.start()
     time.sleep(10)
 

@@ -4,6 +4,8 @@ import numpy as np
 from statistics import mean, stdev
 from scipy.fft import fft, fftfreq
 from scipy.signal import butter, filtfilt, argrelextrema
+import matplotlib.pyplot as plt
+import Settings as s
 
 
 def repetition_features(data, hand, framepersec):
@@ -220,6 +222,8 @@ def predict_performance(features, exercise_name, model_name):
     model = pickle.load(open(f'{model_name}.sav', 'rb'))
     d_standardize_values = pickle.load(open('standardize_values_dict', 'rb'))
 
+    if exercise_name not in d_standardize_values: # if exercise is not part of the model..
+        exercise_name = 'raise_arms_bend_elbows'
     means = d_standardize_values[exercise_name]['means']
     std = d_standardize_values[exercise_name]['std']
 
@@ -235,6 +239,16 @@ def predict_performance(features, exercise_name, model_name):
     print(predictions)
     return predictions
 
+
+def plot_data(exercise_name, right_hand_data, left_hand_data):
+    plt.figure()
+    plt.plot(right_hand_data, label="right hand")
+    plt.legend(loc='lower right')
+    plt.plot(left_hand_data, label="left hand")
+    plt.xlabel("Frame")
+    plt.ylabel("Angle Degree")
+    plt.savefig(s.participant_code+exercise_name+'.png')
+    # plt.show()
 
 if __name__ == "__main__":
 

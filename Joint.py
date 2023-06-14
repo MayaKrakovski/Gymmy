@@ -17,3 +17,9 @@ class Joint(object):
         arr = [self.type, self.x, self.y, self.z]
         return arr
 
+    def is_joint_all_zeros(self):
+        if self.x == 0 and self.y == 0 and self.z == 0:
+            return True
+        else:
+            return False
+

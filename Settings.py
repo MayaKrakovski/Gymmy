@@ -6,6 +6,7 @@ def __init__():
     global robot
     global screen
 
+    global participant_code
     global excel_workbook
     global ex_list
 

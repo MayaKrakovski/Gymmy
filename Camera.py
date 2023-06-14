@@ -13,7 +13,7 @@ from Joint import Joint
 import Settings as s
 import Excel
 from Audio import say
-from performance_classification import feature_extraction, predict_performance
+from performance_classification import feature_extraction, predict_performance, plot_data
 
 class Camera(threading.Thread):
 
@@ -40,7 +40,7 @@ class Camera(threading.Thread):
             # change from string to float values
             joints = {}  # joints dict data
             for j in joints_str:
-                joints[j[0]] = Joint(j[0], float(j[1]), float(j[2]), float(j[3]))
+                joints[j[0]] = Joint(j[0], float(j[1]), float(j[2]), float(j[3])*100) # z is smaller than x and y!!
             return joints
         except socket.timeout:  # fail after 1 second of no activity
             print("Didn't receive data! [Timeout]")
@@ -81,7 +81,10 @@ class Camera(threading.Thread):
             # pass
             print("could not calculate the angle")
 
-    def calc_angle2(self, joint1, joint2, joint3):
+    def calc_angle_3d(self, joint1, joint2, joint3):
+        if joint1.is_joint_all_zeros() or joint2.is_joint_all_zeros() or joint3.is_joint_all_zeros():
+            return None
+
         a = np.array([joint1.x, joint1.y,  joint1.z]) # First
         b = np.array([joint2.x, joint2.y, joint2.z]) # Mid
         c = np.array([joint3.x, joint3.y, joint3.z]) # End
@@ -94,8 +97,8 @@ class Camera(threading.Thread):
             return round(np.degrees(angle),2)
 
         except:
-            # pass
             print("could not calculate the angle")
+            return None
 
     def calc_dist(self, joint1, joint2):
         distance = math.hypot(joint1.x - joint2.x,
@@ -103,7 +106,7 @@ class Camera(threading.Thread):
         return distance
 
     def exercise_two_angles(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub,
-                            joint4, joint5, joint6, up_lb2, up_ub2, down_lb2, down_ub2):
+                            joint4, joint5, joint6, up_lb2, up_ub2, down_lb2, down_ub2, use_alternate_angles=False):
         flag = True
         counter = 0
         list_joints = []
@@ -114,10 +117,16 @@ class Camera(threading.Thread):
                                               joints[str("R_"+joint3)])
                 left_angle = self.calc_angle(joints[str("L_"+joint1)], joints[str("L_"+joint2)],
                                              joints[str("L_"+joint3)])
-                right_angle2 = self.calc_angle(joints[str("R_"+joint4)], joints[str("R_"+joint5)],
-                                              joints[str("R_"+joint6)])
-                left_angle2 = self.calc_angle(joints[str("L_"+joint4)], joints[str("L_"+joint5)],
-                                             joints[str("L_"+joint6)])
+                if use_alternate_angles:
+                    right_angle2 = self.calc_angle_3d(joints[str("L_"+joint1)], joints[str("R_"+joint2)],
+                                                     joints[str("R_"+joint3)])
+                    left_angle2 = self.calc_angle_3d(joints[str("R_"+joint1)], joints[str("L_"+joint2)],
+                                                    joints[str("L_"+joint3)])
+                else:
+                    right_angle2 = self.calc_angle(joints[str("R_"+joint4)], joints[str("R_"+joint5)],
+                                                  joints[str("R_"+joint6)])
+                    left_angle2 = self.calc_angle(joints[str("L_"+joint4)], joints[str("L_"+joint5)],
+                                                 joints[str("L_"+joint6)])
                 new_entry = [joints[str("R_"+joint1)], joints[str("R_"+joint2)], joints[str("R_"+joint3)],
                              joints[str("L_"+joint1)], joints[str("L_"+joint2)], joints[str("L_"+joint3)],
                              joints[str("R_"+joint4)], joints[str("R_"+joint5)], joints[str("R_"+joint6)],
@@ -143,17 +152,24 @@ class Camera(threading.Thread):
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
 
-    def exercise_one_angle(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub):
+    def exercise_one_angle(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub, use_alternate_angles=False):
         flag = True
         counter = 0
         list_joints = []
         while s.req_exercise == exercise_name:
             joints = self.get_skeleton_data()
             if joints is not None:
-                right_angle = self.calc_angle(joints[str("R_"+joint1)], joints[str("R_"+joint2)],
-                                              joints[str("R_"+joint3)])
-                left_angle = self.calc_angle(joints[str("L_"+joint1)], joints[str("L_"+joint2)],
-                                             joints[str("L_"+joint3)])
+                if use_alternate_angles:
+                    right_angle = self.calc_angle_3d(joints[str("L_"+joint1)], joints[str("R_"+joint2)],
+                                                      joints[str("R_"+joint3)])
+                    left_angle = self.calc_angle_3d(joints[str("R_"+joint1)], joints[str("L_"+joint2)],
+                                                    joints[str("L_"+joint3)])
+                else:
+                    right_angle = self.calc_angle(joints[str("R_"+joint1)], joints[str("R_"+joint2)],
+                                                  joints[str("R_"+joint3)])
+                    left_angle = self.calc_angle(joints[str("L_"+joint1)], joints[str("L_"+joint2)],
+                                                 joints[str("L_"+joint3)])
+
                 new_entry = [joints[str("R_"+joint1)], joints[str("R_"+joint2)], joints[str("R_"+joint3)],
                              joints[str("L_"+joint1)], joints[str("L_"+joint2)], joints[str("L_"+joint3)],
                              right_angle, left_angle]
@@ -175,7 +191,6 @@ class Camera(threading.Thread):
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
 
-
     def raise_arms_horizontally(self):
         self.exercise_one_angle("raise_arms_horizontally", "Shoulder", "Hip", "Wrist", 80, 105, 5, 30)
 
@@ -186,9 +201,12 @@ class Camera(threading.Thread):
         self.exercise_two_angles("raise_arms_bend_elbows", "Elbow", "Shoulder", "Wrist", 130, 180, 5, 35,
                                  "Shoulder", "Hip", "Elbow", 70, 120, 70, 120)
 
+    def open_and_close_arms(self):
+        self.exercise_one_angle("open_and_close_arms", "Shoulder", "Shoulder", "Elbow", 150, 175, 90, 120, True)
+
     def open_and_close_arms_90(self):
-        self.exercise_two_angles("open_and_close_arms_90", "Shoulder", "Hip", "Wrist", 80, 105, 80, 105,
-                                 "Shoulder", "Hip", "Elbow", 70, 120, 70, 120)
+        self.exercise_two_angles("open_and_close_arms_90", "Wrist", "Elbow", "Shoulder", 80, 110, 80, 110,
+                                "Shoulder", "Shoulder", "Elbow", 150, 175, 90, 120, True)
 
     def hello_waving(self): # check if the participant waved
         time.sleep(8)
@@ -207,30 +225,37 @@ class Camera(threading.Thread):
     def check_angle_range(self, joint1, joint2, joint3):
         # just for coding and understanding angle boundaries
         list_joints = []
+        list_joints2 = []
         medaip = MP()
         medaip.start()
         s.finish_workout = False
         while not s.finish_workout:
             joints = self.get_skeleton_data()
             if joints is not None:
-                right_angle = self.calc_angle(joints[str("R_"+joint1)], joints[str("L_"+joint2)],
+                right_angle = self.calc_angle(joints[str("R_"+joint2)], joints[str("R_"+joint1)],
                                               joints[str("R_"+joint3)])
-                left_angle = self.calc_angle(joints[str("L_"+joint1)], joints[str("L_"+joint2)],
+                left_angle = self.calc_angle(joints[str("L_"+joint2)], joints[str("L_"+joint1)],
                                              joints[str("L_"+joint3)])
-                right_angle2 = self.calc_angle2(joints[str("L_"+joint1)], joints[str("R_"+joint2)],
+                right_angle2 = self.calc_angle_3d(joints[str("R_"+joint1)], joints[str("R_"+joint2)],
                                               joints[str("R_"+joint3)])
-                left_angle2 = self.calc_angle2(joints[str("R_"+joint1)], joints[str("L_"+joint2)],
-                                             joints[str("L_"+joint3)])
-                print(right_angle2)
-                print(left_angle2)
-                if right_angle is not None and left_angle is not None:
+                # left_angle = self.calc_angle_3d(joints[str("R_"+joint1)], joints[str("L_"+joint2)],
+                #                              joints[str("L_"+joint3)])
+                # print(right_angle)
+                # print(left_angle)
+                if right_angle is not None and right_angle2 is not None:
                     list_joints.append(right_angle)
-                    list_joints.append(left_angle)
+                    list_joints2.append(right_angle2)
+                    # list_joints.append(left_angle)
         print(list_joints)
         print(mean(list_joints))
         print(stdev(list_joints))
 
-        #170 +- 11
+        print(list_joints2)
+        print(mean(list_joints2))
+        print(stdev(list_joints2))
+
+        #165 +- 10
+        # 108+-20
 
     def classify_performance(self, list_joints, exercise_name, indexangleright, indexangleleft):
         df = pd.DataFrame([sublist[indexangleright:indexangleleft+1] for sublist in list_joints]).T # angles are in the indexangleright and indexangleleft indexs
@@ -244,6 +269,7 @@ class Camera(threading.Thread):
         predictions = predict_performance(features, exercise, s.adaptation_model_name)
         s.performance_class[exercise] = predictions
         print(f"CAMERA: performance classification {s.performance_class}")
+        plot_data(exercise_name, right_hand_data, left_hand_data) # only for internal checks comparing plot to classification
 
     def run(self):
         print ("CAMERA START")
@@ -254,6 +280,7 @@ class Camera(threading.Thread):
             time.sleep(0.00000001)  # Prevents the MP to stuck
             if s.req_exercise != "":
                 print("CAMERA: Exercise ", s.req_exercise, " start")
+                time.sleep(3)
                 getattr(self, s.req_exercise)()
                 print("CAMERA: Exercise ", s.req_exercise, " done")
                 s.req_exercise = ""
@@ -264,14 +291,15 @@ if __name__ == '__main__':
     check = True
     if check:
         c = Camera()
-        # c.check_angle_range("Elbow", "Shoulder", "Wrist")
-        c.check_angle_range("Shoulder", "Shoulder", "Elbow")
+        # c.check_angle_range("Shoulder", "Hip", "Wrist")
+        c.check_angle_range("Wrist", "Elbow", "Shoulder")
 
     else:
         language = 'Hebrew'
         gender = 'Female'
         s.audio_path = 'audio files/' + language + '/' + gender + '/'
         s.finish_workout = False
+        s.participant_code = "1106"
         s.rep = 8
         s.req_exercise = "raise_arms_bend_elbows"
         Excel.create_workbook()

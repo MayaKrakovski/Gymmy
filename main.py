@@ -16,6 +16,7 @@ def print_hi(name):
 # TODO add more exercises
 # TODO adaptive framework
 # TODO GUI
+# delay between exercises
 
 if __name__ == '__main__':
     s.camera_num = 0  # 0 - webcam, 2 - second USB in maya's computer
@@ -26,6 +27,7 @@ if __name__ == '__main__':
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
     s.picture_path = 'audio files/' + language + '/' + gender + '/'
     # s.str_to_say = ""
+    s.participant_code = "1106"
 
     # Training variables initialization
     s.exercise_amount = 6
