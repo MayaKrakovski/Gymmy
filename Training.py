@@ -26,7 +26,8 @@ class Training(threading.Thread):
         say('lets start')
         time.sleep(2)
         print("Training: finish waving")
-
+        s.poppy_done = False # AFTER HELLO
+        s.camera_done = False # AFTER HELLO
         if s.adaptive:
             self.adatpive_training_session()
         else:
@@ -45,10 +46,16 @@ class Training(threading.Thread):
         print("Training: start exercises")
         # TODO - adding random choice of exercises.
         exercise_names = ["raise_arms_horizontally", "bend_elbows", "raise_arms_bend_elbows", "open_and_close_arms",
-                          "open_and_close_arms_90"]
+                          "open_and_close_arms_90", "raise_arms_forward"]
+        # exercise_names = ["raise_arms_forward"]
         for e in exercise_names:
+            time.sleep(2) # wait between exercises
             self.run_exercise(e)
-            time.sleep(5)
+            while (not s.poppy_done) or (not s.camera_done):
+                print("not done")
+                time.sleep(1)
+            s.poppy_done = False
+            s.camera_done = False
 
     def finish_workout(self):
         say('goodbye')
@@ -62,14 +69,15 @@ class Training(threading.Thread):
     def run_exercise(self, name):
         s.success_exercise = False
         print("TRAINING: Exercise ", name, " start")
-        s.req_exercise = name
         say(name)
-        time.sleep(10)  # Delay the robot movement after the audio is played
+        time.sleep(3)  # Delay the robot movement after the audio is played
+        s.req_exercise = name
         while s.req_exercise == name:
-            time.sleep(0.00000001)  # Prevents the MP to stuck
+            time.sleep(0.001)  # Prevents the MP to stuck
         if s.success_exercise: # TODO change for adaptive training
             say(self.random_encouragement())
         print("TRAINING: Exercise ", name, " done")
+        time.sleep(1)
 
     def random_encouragement(self):
         enco = ["well done", "very good", "excellent"]

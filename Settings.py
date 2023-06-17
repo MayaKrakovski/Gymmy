@@ -18,6 +18,8 @@ def __init__():
     global waved
     global success_exercise
     global calibration
+    global poppy_done
+    global camera_done
 
     # audio variables
     global audio_path

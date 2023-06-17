@@ -8,6 +8,8 @@ from Training import Training
 from Screen import Screen, FullScreenApp
 from PIL import Image, ImageTk
 import pickle
+import datetime
+
 
 
 def print_hi(name):
@@ -18,6 +20,7 @@ def print_hi(name):
 # TODO GUI
 # delay between exercises
 
+
 if __name__ == '__main__':
     s.camera_num = 0  # 0 - webcam, 2 - second USB in maya's computer
 
@@ -27,7 +30,9 @@ if __name__ == '__main__':
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
     s.picture_path = 'audio files/' + language + '/' + gender + '/'
     # s.str_to_say = ""
-    s.participant_code = "1106"
+    current_time = datetime.datetime.now()
+    s.participant_code = str(current_time.day) + "." + str(current_time.month) + " " + str(current_time.hour) + "." + \
+                         str(current_time.minute) + "." + str(current_time.second)
 
     # Training variables initialization
     s.exercise_amount = 6
@@ -37,6 +42,9 @@ if __name__ == '__main__':
     s.waved = False
     s.success_exercise = False
     s.calibration = False
+    s.training_done = False
+    s.poppy_done = False
+    s.camera_done = False
 
     # Excel variable
     Excel.create_workbook()

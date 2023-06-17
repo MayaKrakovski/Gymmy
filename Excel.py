@@ -6,8 +6,7 @@ from Joint import Joint
 
 def create_workbook():
     current_time = datetime.datetime.now()
-    workbook_name = str(current_time.day) + "." + str(current_time.month) + " " + str(current_time.hour) + "." +\
-        str(current_time.minute) + "." + str(current_time.second) + ".xlsx"
+    workbook_name = s.participant_code + ".xlsx"
     s.excel_workbook = xlsxwriter.Workbook(workbook_name)
 
 
@@ -45,7 +44,18 @@ def success_worksheet():
     for ex in s.ex_list:
         s.worksheet.write(row, col, ex[0])
         s.worksheet.write(row, col+1, ex[1])
+        row += 1
+        col = 0
 
+    row = 1
+    col = 0
+    s.worksheet = s.excel_workbook.add_worksheet("performance_class")
+    for ex in s.performance_class:
+        s.worksheet.write(row, col, ex)
+        s.worksheet.write(row, col+1, s.performance_class[ex][0])
+        s.worksheet.write(row, col+2, s.performance_class[ex][1])
+        row += 1
+        col = 0
 
 def close_workbook():
     s.excel_workbook.close()
