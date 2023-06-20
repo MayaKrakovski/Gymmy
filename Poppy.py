@@ -2,6 +2,7 @@ import threading
 from pypot.creatures import PoppyTorso
 import time
 import Settings as s
+from Audio import say
 
 
 class Poppy(threading.Thread):
@@ -44,6 +45,8 @@ class Poppy(threading.Thread):
         else:
             for i in range(s.rep):
                 getattr(self, ex)(i)
+                if s.robot_count:
+                    say(str(i+1))
                 if s.success_exercise:
                     break
 

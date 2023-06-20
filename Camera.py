@@ -142,7 +142,8 @@ class Camera(threading.Thread):
                         flag = True
                         counter += 1
                         print(counter)
-                        say(str(counter))
+                        if not s.robot_count:
+                            say(str(counter))
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & \
                             (down_lb2 < right_angle2 < down_ub2) & (down_lb2 < left_angle2 < down_ub2) & (flag):
                         flag = False
@@ -190,7 +191,8 @@ class Camera(threading.Thread):
                         flag = True
                         counter += 1
                         print(counter)
-                        say(str(counter))
+                        if not s.robot_count:
+                            say(str(counter))
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & \
                             (down_lb2 < right_angle2 < down_ub2) & (down_lb2 < left_angle2 < down_ub2) & (flag):
                         flag = False
@@ -235,7 +237,8 @@ class Camera(threading.Thread):
                         flag = True
                         counter += 1
                         print(counter)
-                        say(str(counter))
+                        if not s.robot_count:
+                            say(str(counter))
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & (flag):
                         flag = False
             if counter == s.rep:
@@ -275,7 +278,8 @@ class Camera(threading.Thread):
                         flag = True
                         counter += 1
                         print(counter)
-                        say(str(counter))
+                        if not s.robot_count:
+                            say(str(counter))
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & (flag):
                         flag = False
             if counter == s.rep:
@@ -307,7 +311,7 @@ class Camera(threading.Thread):
                                     "Shoulder", "Shoulder", "Elbow", 140, 180, 80, 120, "second", True)
 
     def raise_arms_forward(self):
-        self.exercise_two_angles_3d("raise_arms_forward", "Wrist", "Shoulder", "Hip", 85, 120, 10, 30,
+        self.exercise_two_angles_3d("raise_arms_forward", "Wrist", "Shoulder", "Hip", 85, 135, 10, 50,
                                    "Shoulder", "Shoulder", "Wrist", 80, 115, 80, 115, "first", True)
 
     def hello_waving(self):  # check if the participant waved
