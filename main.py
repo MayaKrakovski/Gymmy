@@ -35,8 +35,8 @@ if __name__ == '__main__':
                          str(current_time.minute) + "." + str(current_time.second)
 
     # Training variables initialization
-    s.exercise_amount = 1
-    s.rep = 1
+    s.exercise_amount = 6
+    s.rep = 8
     s.req_exercise = ""
     s.finish_workout = False
     s.waved = False
