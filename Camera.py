@@ -147,7 +147,7 @@ class Camera(threading.Thread):
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & \
                             (down_lb2 < right_angle2 < down_ub2) & (down_lb2 < left_angle2 < down_ub2) & (flag):
                         flag = False
-            if counter == s.rep:
+            if (not s.robot_count) and (counter == s.rep):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
@@ -196,7 +196,7 @@ class Camera(threading.Thread):
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & \
                             (down_lb2 < right_angle2 < down_ub2) & (down_lb2 < left_angle2 < down_ub2) & (flag):
                         flag = False
-            if counter == s.rep:
+            if (not s.robot_count) and (counter == s.rep):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
@@ -241,7 +241,7 @@ class Camera(threading.Thread):
                             say(str(counter))
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & (flag):
                         flag = False
-            if counter == s.rep:
+            if (not s.robot_count) and (counter == s.rep):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
@@ -282,7 +282,7 @@ class Camera(threading.Thread):
                             say(str(counter))
                     if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & (flag):
                         flag = False
-            if counter == s.rep:
+            if (not s.robot_count) and (counter == s.rep):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break

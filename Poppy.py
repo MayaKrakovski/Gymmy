@@ -70,21 +70,21 @@ class Poppy(threading.Thread):
                     self.poppy.l_elbow_y.goto_position(90, 1.5, wait=False),
                     self.poppy.r_shoulder_x.goto_position(-90, 1.5, wait=False),
                     self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)]
-        time.sleep(1.5)
+        time.sleep(2)
         hands_down = [self.poppy.l_shoulder_x.goto_position(0, 1.5, wait=False),
                       self.poppy.l_elbow_y.goto_position(90, 1.5, wait=False),
                       self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False),
                       self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)]
-        time.sleep(1.5)
+        time.sleep(2)
 
     # EX2 - Bend Elbows
     def bend_elbows(self, counter):
         self.poppy.r_arm[3].goto_position(-60, 1.5, wait=False)
         self.poppy.l_arm[3].goto_position(-60, 1.5, wait=True)
-        time.sleep(1)
+        time.sleep(2)
         self.poppy.r_arm[3].goto_position(85, 1.5, wait=False)
         self.poppy.l_arm[3].goto_position(85, 1.5, wait=True)
-        time.sleep(1)
+        time.sleep(2)
 
     # EX3 - Raise Arms Bend Elbows
     def raise_arms_bend_elbows(self, counter):
@@ -96,12 +96,12 @@ class Poppy(threading.Thread):
                   self.poppy.r_arm_z.goto_position(90, 2, wait=False),
                   self.poppy.r_shoulder_x.goto_position(-50, 2, wait=False),
                   self.poppy.r_elbow_y.goto_position(-50, 2, wait=False)]
-        time.sleep(1.5)
+        time.sleep(2)
         self.poppy.r_shoulder_x.goto_position(-85, 1.5, wait=False)
         self.poppy.l_shoulder_x.goto_position(95, 1.5, wait=False)
         self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
         self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
-        time.sleep(1.5)
+        time.sleep(2)
         if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
             # return to init position
             self.poppy.l_arm_z.goto_position(0, 1.5, wait=False)
@@ -120,10 +120,10 @@ class Poppy(threading.Thread):
         self.poppy.l_shoulder_x.goto_position(95, 1.5, wait=False)
         # self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
         # self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
-        time.sleep(1.2)
+        time.sleep(2)
         self.poppy.l_shoulder_x.goto_position(0, 2, wait=False)
         self.poppy.r_shoulder_x.goto_position(0, 2, wait=True)
-        time.sleep(1.2)
+        time.sleep(2)
         if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
             self.poppy.l_shoulder_y.goto_position(0, 2, wait=False)
             self.poppy.r_shoulder_y.goto_position(0, 2, wait=False)
@@ -139,10 +139,10 @@ class Poppy(threading.Thread):
             self.poppy.r_elbow_y.goto_position(0, 1.5, wait=True)
         self.poppy.l_shoulder_x.goto_position(90, 1, wait=False)
         self.poppy.r_shoulder_x.goto_position(-90, 1, wait=True)
-        time.sleep(1.5)
+        time.sleep(2)
         self.poppy.l_shoulder_x.goto_position(0, 1, wait=False)
         self.poppy.r_shoulder_x.goto_position(0, 1, wait=True)
-        time.sleep(1.5)
+        time.sleep(2)
         if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
             self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
             self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
@@ -157,12 +157,12 @@ class Poppy(threading.Thread):
             self.poppy.r_shoulder_y.goto_position(-90, 1.5, wait=False)
             self.poppy.l_arm_z.goto_position(-90, 1.5, wait=False)
             self.poppy.r_arm_z.goto_position(90, 1.5, wait=False)
-            time.sleep(1.5)
+            time.sleep(2)
             self.poppy.l_arm_z.goto_position(0, 1.5, wait=False)
             self.poppy.r_arm_z.goto_position(0, 1.5, wait=False)
             self.poppy.l_shoulder_y.goto_position(0, 1.5, wait=False)
             self.poppy.r_shoulder_y.goto_position(0, 1.5, wait=True)
-            time.sleep(1.5)
+            time.sleep(2)
 
 
 if __name__ == "__main__":
