@@ -151,7 +151,7 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-        if s.adaptive:
+        if s.adaptive and len(list_joints)>0:
             self.classify_performance(list_joints, exercise_name, 12, 13)
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
@@ -200,7 +200,7 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-        if s.adaptive:
+        if s.adaptive and (counter > 1):
             if angle_classification == "first":
                 self.classify_performance(list_joints, exercise_name, 12, 13)
             else:
@@ -245,7 +245,7 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-        if s.adaptive:
+        if s.adaptive and (counter > 1):
             self.classify_performance(list_joints, exercise_name, 6, 7)
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
@@ -286,7 +286,7 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-        if s.adaptive:
+        if s.adaptive and (counter > 1):
             self.classify_performance(list_joints, exercise_name, 6, 7)
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
