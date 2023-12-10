@@ -45,8 +45,6 @@ class Poppy(threading.Thread):
         else:
             for i in range(s.rep):
                 getattr(self, ex)(i)
-                if s.robot_count:
-                    say(str(i+1))
                 if s.success_exercise:
                     break
 
@@ -75,6 +73,8 @@ class Poppy(threading.Thread):
                       self.poppy.l_elbow_y.goto_position(90, 1.5, wait=False),
                       self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False),
                       self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)]
+        if s.robot_count:
+            say(str(counter + 1))
         time.sleep(2)
 
     # EX2 - Bend Elbows
@@ -84,6 +84,8 @@ class Poppy(threading.Thread):
         time.sleep(2)
         self.poppy.r_arm[3].goto_position(85, 1.5, wait=False)
         self.poppy.l_arm[3].goto_position(85, 1.5, wait=True)
+        if s.robot_count:
+            say(str(counter + 1))
         time.sleep(2)
 
     # EX3 - Raise Arms Bend Elbows
@@ -101,6 +103,8 @@ class Poppy(threading.Thread):
         self.poppy.l_shoulder_x.goto_position(95, 1.5, wait=False)
         self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
         self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
+        if s.robot_count:
+            say(str(counter + 1))
         time.sleep(2)
         if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
             # return to init position
@@ -123,6 +127,8 @@ class Poppy(threading.Thread):
         time.sleep(2)
         self.poppy.l_shoulder_x.goto_position(0, 2, wait=False)
         self.poppy.r_shoulder_x.goto_position(0, 2, wait=True)
+        if s.robot_count:
+            say(str(counter + 1))
         time.sleep(2)
         if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
             self.poppy.l_shoulder_y.goto_position(0, 2, wait=False)
@@ -142,6 +148,8 @@ class Poppy(threading.Thread):
         time.sleep(2)
         self.poppy.l_shoulder_x.goto_position(0, 1, wait=False)
         self.poppy.r_shoulder_x.goto_position(0, 1, wait=True)
+        if s.robot_count:
+            say(str(counter + 1))
         time.sleep(2)
         if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
             self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
@@ -162,16 +170,23 @@ class Poppy(threading.Thread):
             self.poppy.r_arm_z.goto_position(0, 1.5, wait=False)
             self.poppy.l_shoulder_y.goto_position(0, 1.5, wait=False)
             self.poppy.r_shoulder_y.goto_position(0, 1.5, wait=True)
+            if s.robot_count:
+                say(str(counter + 1))
             time.sleep(2)
 
 
 if __name__ == "__main__":
     s.rep = 3
+    s.robot_count = True
     s.success_exercise = False
     s.finish_workout = False
+    language = 'Hebrew'
+    gender = 'Male'
+    s.audio_path = 'audio files/' + language + '/' + gender + '/'
+
     robot = Poppy()
 
-    robot.exercise_demo("open_and_close_arms_90")
+    # robot.exercise_demo("open_and_close_arms_90")
     robot.exercise_demo("raise_arms_forward")
     # robot.start()
     time.sleep(10)

@@ -371,7 +371,7 @@ class Camera(threading.Thread):
         features = feature_extraction(right_hand_data, left_hand_data)
         exercise = exercise_name
         predictions = predict_performance(features, exercise, s.adaptation_model_name)
-        s.performance_class[exercise] = predictions
+        s.performance_class[exercise] = {'right': predictions[0], 'left': predictions[1]}
         print(f"CAMERA: performance classification {s.performance_class}")
         plot_data(exercise_name, right_hand_data, left_hand_data)  # only for internal checks comparing plot to classification
 
@@ -382,6 +382,7 @@ class Camera(threading.Thread):
 
         while not s.finish_workout:
             time.sleep(0.00000001)  # Prevents the MP to stuck
+            jd = self.get_skeleton_data()  # clear data TODO check if it help
             if s.req_exercise != "":
                 print("CAMERA: Exercise ", s.req_exercise, " start")
                 time.sleep(1)
@@ -405,8 +406,9 @@ if __name__ == '__main__':
         s.audio_path = 'audio files/' + language + '/' + gender + '/'
         s.finish_workout = False
         s.participant_code = "1106"
-        s.rep = 8
-        s.req_exercise = "open_and_close_arms"
+        s.rep = 2
+        s.req_exercise = "bend_elbows"
+        s.robot_count = False
         Excel.create_workbook()
         s.ex_list = []
         s.adaptive = True

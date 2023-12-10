@@ -6,6 +6,7 @@ import threading
 import cv2
 import mediapipe as mp
 import Settings as s
+import time
 
 
 class MP(threading.Thread):
@@ -16,12 +17,13 @@ class MP(threading.Thread):
 
     def run(self):
         print("MP START")
+        recorded_data = []
         show = True
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
         mp_pose = mp.solutions.pose
 
-        cap = cv2.VideoCapture() # 0 - webcam, 2 - second USB in maya's computer
+        cap = cv2.VideoCapture(0) # 0 - webcam, 2 - second USB in maya's computer
         image_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float `width`
         # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1680)
         image_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float `height`
@@ -98,7 +100,21 @@ class MP(threading.Thread):
                     s.finish_workout = True
                     break
 
+                landmarks = results.pose_landmarks.landmark if results.pose_landmarks else None
+                # Convert non-serializable data to serializable format
+                serializable_landmarks = None
+                if landmarks:
+                    serializable_landmarks = [[lm.x, lm.y, lm.z, lm.visibility] for lm in landmarks]
+                recorded_data.append({
+                    'timestamp': time.time(),
+                    'landmarks': serializable_landmarks
+                })
+
             cap.release()
+
+            # Save recorded data to a JSON file
+            with open('recorded_data.json', 'w') as f:
+                json.dump(recorded_data, f)
 
 
 if __name__ == '__main__':

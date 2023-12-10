@@ -17,45 +17,68 @@ class Training(threading.Thread):
         while not s.waved:
             time.sleep(0.00000001)  # Prevents the MP to stuck
             continue
-        print("Training: Calibration")
-        s.camera.init_position()
-        while not s.calibration:
-            time.sleep(0.00000001)
-            continue
+        if not s.calibration:
+            print("Training: Calibration")
+            s.camera.init_position()
+            while not s.calibration:
+                time.sleep(0.00000001)
+                continue
         time.sleep(3)
         say('lets start')
-        time.sleep(2)
+        time.sleep(2.5)
         print("Training: finish waving")
         s.poppy_done = False # AFTER HELLO
         s.camera_done = False # AFTER HELLO
         if s.adaptive:
-            self.adatpive_training_session()
+            self.adaptive_training_session()
         else:
             self.training_session()
 
         self.finish_workout()
 
-    def adatpive_training_session(self):
-        self.training_session()
-        # exercise_names = ["raise_arms_horizontally", "bend_elbows"]
-        # for e in exercise_names:
-        #     self.run_exercise(e)
-        #     time.sleep(5)
-
-    def training_session(self):
-        print("Training: start exercises")
-        # TODO - adding random choice of exercises.
-        exercise_names = ["raise_arms_horizontally", "bend_elbows", "raise_arms_bend_elbows", "open_and_close_arms",
-                          "open_and_close_arms_90", "raise_arms_forward"]
-        # exercise_names = ["raise_arms_forward"]
+    def adaptive_training_session(self):
+        exercise_names = ["raise_arms_horizontally", "bend_elbows"]
         for e in exercise_names:
-            time.sleep(2) # wait between exercises
+            time.sleep(2)
             self.run_exercise(e)
             while (not s.poppy_done) or (not s.camera_done):
                 print("not done")
                 time.sleep(1)
             s.poppy_done = False
             s.camera_done = False
+
+        right_values = [value['right'] for value in s.performance_class.values()]
+        left_values = [value['left'] for value in s.performance_class.values()]
+        if sum(right_values) > 1.5 and sum(left_values) > 2:
+            print("problem in both hands!")
+        elif sum(left_values) > 1.1:  # In the middle of the exercise provide corrective feedback (for example: try to raise your hand more),
+            print("problem in right hand!")
+        elif sum(left_values) > 1.1:  # problem in left hand!
+            print("problem in left hand!")
+        else:
+            print("no problems!")  # add try again if not succeeded
+            s.robot_count = False
+
+        exercise_names = ["raise_arms_bend_elbows", "open_and_close_arms",
+                          "open_and_close_arms_90", "raise_arms_forward"]
+        for e in exercise_names:
+            time.sleep(2)  # wait between exercises
+            self.run_exercise(e)
+            while (not s.poppy_done) or (not s.camera_done):
+                print("not done")
+                time.sleep(1)
+
+    def training_session(self):
+        print("Training: start exercises")
+        # TODO - adding random choice of exercises.
+        exercise_names = ["raise_arms_horizontally", "bend_elbows", "raise_arms_bend_elbows", "open_and_close_arms",
+                          "open_and_close_arms_90", "raise_arms_forward"]
+        for e in exercise_names:
+            time.sleep(2) # wait between exercises
+            self.run_exercise(e)
+            while (not s.poppy_done) or (not s.camera_done):
+                print("not done")
+                time.sleep(1)
 
     def finish_workout(self):
         say('goodbye')
@@ -74,7 +97,7 @@ class Training(threading.Thread):
         s.req_exercise = name
         while s.req_exercise == name:
             time.sleep(0.001)  # Prevents the MP to stuck
-        if s.success_exercise: # TODO change for adaptive training
+        if s.success_exercise:
             say(self.random_encouragement())
         print("TRAINING: Exercise ", name, " done")
         time.sleep(1)
