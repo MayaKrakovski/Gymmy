@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     # Audio variables initialization
     language = 'Hebrew'
-    gender = 'Male'
+    gender = 'Female'
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
     s.picture_path = 'audio files/' + language + '/' + gender + '/'
     # s.str_to_say = ""
@@ -45,6 +45,7 @@ if __name__ == '__main__':
     s.poppy_done = False
     s.camera_done = False
     s.robot_count = True
+    s.try_again = False
     # Excel variable
     Excel.create_workbook()
     s.ex_list = []

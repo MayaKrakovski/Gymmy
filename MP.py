@@ -100,20 +100,15 @@ class MP(threading.Thread):
                     s.finish_workout = True
                     break
 
-                landmarks = results.pose_landmarks.landmark if results.pose_landmarks else None
-                # Convert non-serializable data to serializable format
-                serializable_landmarks = None
-                if landmarks:
-                    serializable_landmarks = [[lm.x, lm.y, lm.z, lm.visibility] for lm in landmarks]
                 recorded_data.append({
                     'timestamp': time.time(),
-                    'landmarks': serializable_landmarks
+                    'json_message': message
                 })
 
             cap.release()
 
             # Save recorded data to a JSON file
-            with open('recorded_data.json', 'w') as f:
+            with open('recorded_data2.json', 'w') as f:
                 json.dump(recorded_data, f)
 
 

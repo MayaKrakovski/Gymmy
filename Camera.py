@@ -66,7 +66,7 @@ class Camera(threading.Thread):
                     init_pos = True  # all joints are visible + arms are raised to the sides - position initialized.
             else:  # skeleton is not recognized in frame
                 print("user is not recognized")
-        say("calibration_complete")
+        # say("calibration_complete")
         s.calibration = True
         print("CAMERA: init position verified")
 
@@ -105,56 +105,6 @@ class Camera(threading.Thread):
         distance = math.hypot(joint1.x - joint2.x,
                               joint1.y - joint2.y)
         return distance
-
-    def exercise_two_angles(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub,
-                            joint4, joint5, joint6, up_lb2, up_ub2, down_lb2, down_ub2, use_alternate_angles=False):
-        # TODO - remove this function.
-        flag = True
-        counter = 0
-        list_joints = []
-        while s.req_exercise == exercise_name:
-            joints = self.get_skeleton_data()
-            if joints is not None:
-                right_angle = self.calc_angle(joints[str("R_" + joint1)], joints[str("R_" + joint2)],
-                                              joints[str("R_" + joint3)])
-                left_angle = self.calc_angle(joints[str("L_" + joint1)], joints[str("L_" + joint2)],
-                                             joints[str("L_" + joint3)])
-                if use_alternate_angles:
-                    right_angle2 = self.calc_angle_3d(joints[str("L_" + joint4)], joints[str("R_" + joint5)],
-                                                      joints[str("R_" + joint6)])
-                    left_angle2 = self.calc_angle_3d(joints[str("R_" + joint4)], joints[str("L_" + joint5)],
-                                                     joints[str("L_" + joint6)])
-                else:
-                    right_angle2 = self.calc_angle(joints[str("R_" + joint4)], joints[str("R_" + joint5)],
-                                                   joints[str("R_" + joint6)])
-                    left_angle2 = self.calc_angle(joints[str("L_" + joint4)], joints[str("L_" + joint5)],
-                                                  joints[str("L_" + joint6)])
-                new_entry = [joints[str("R_" + joint1)], joints[str("R_" + joint2)], joints[str("R_" + joint3)],
-                             joints[str("L_" + joint1)], joints[str("L_" + joint2)], joints[str("L_" + joint3)],
-                             joints[str("R_" + joint4)], joints[str("R_" + joint5)], joints[str("R_" + joint6)],
-                             joints[str("L_" + joint4)], joints[str("L_" + joint5)], joints[str("L_" + joint6)],
-                             right_angle, left_angle, right_angle2, left_angle2]
-                list_joints.append(new_entry)
-                if right_angle is not None and left_angle is not None and \
-                        right_angle2 is not None and left_angle2 is not None:
-                    if (up_lb < right_angle < up_ub) & (up_lb < left_angle < up_ub) & \
-                            (up_lb2 < right_angle2 < up_ub2) & (up_lb2 < left_angle2 < up_ub2) & (not flag):
-                        flag = True
-                        counter += 1
-                        print(counter)
-                        if not s.robot_count:
-                            say(str(counter))
-                    if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & \
-                            (down_lb2 < right_angle2 < down_ub2) & (down_lb2 < left_angle2 < down_ub2) & (flag):
-                        flag = False
-            if (not s.robot_count) and (counter == s.rep):
-                s.req_exercise = ""
-                s.success_exercise = True
-                break
-        if s.adaptive and len(list_joints)>0:
-            self.classify_performance(list_joints, exercise_name, 12, 13)
-        s.ex_list.append([exercise_name, counter])
-        Excel.wf_joints(exercise_name, list_joints)
 
     def exercise_two_angles_3d(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub,
                                joint4, joint5, joint6, up_lb2, up_ub2, down_lb2, down_ub2, angle_classification, use_alternate_angles=False):
@@ -200,11 +150,11 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-        if s.adaptive and (counter > 1):
+        if s.adaptive:
             if angle_classification == "first":
-                self.classify_performance(list_joints, exercise_name, 12, 13)
+                self.classify_performance(list_joints, exercise_name, 12, 13, counter)
             else:
-                self.classify_performance(list_joints, exercise_name, 14, 15)
+                self.classify_performance(list_joints, exercise_name, 14, 15, counter)
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
 
@@ -245,8 +195,8 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-        if s.adaptive and (counter > 1):
-            self.classify_performance(list_joints, exercise_name, 6, 7)
+        if s.adaptive:
+            self.classify_performance(list_joints, exercise_name, 6, 7, counter)
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
 
@@ -286,8 +236,8 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-        if s.adaptive and (counter > 1):
-            self.classify_performance(list_joints, exercise_name, 6, 7)
+        if s.adaptive:
+            self.classify_performance(list_joints, exercise_name, 6, 7, counter)
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
 
@@ -315,8 +265,13 @@ class Camera(threading.Thread):
                                    "Shoulder", "Shoulder", "Wrist", 80, 115, 80, 115, "first", True)
 
     def hello_waving(self):  # check if the participant waved
-        time.sleep(8)
-        say('ready wave')
+        if s.try_again:
+            print("Camera: Wave for trying again")
+            say('try again')
+        else:
+            time.sleep(4)
+            print("Camera: Wave for start")
+            say('ready wave')
         while s.req_exercise == "hello_waving":
             joints = self.get_skeleton_data()
             if joints is not None:
@@ -360,20 +315,23 @@ class Camera(threading.Thread):
         # print(mean(list_joints2))
         # print(stdev(list_joints2))
 
-    def classify_performance(self, list_joints, exercise_name, indexangleright, indexangleleft):
-        df = pd.DataFrame([sublist[indexangleright:indexangleleft + 1] for sublist in
-                           list_joints]).T  # angles are in the indexangleright and indexangleleft indexs
-        right_hand_data = df.iloc[0]
-        right_hand_data = right_hand_data.dropna().to_numpy()
-        left_hand_data = df.iloc[1]
-        left_hand_data = left_hand_data.dropna().to_numpy()
+    def classify_performance(self, list_joints, exercise_name, indexangleright, indexangleleft, counter):
+        if counter > 1:
+            df = pd.DataFrame([sublist[indexangleright:indexangleleft + 1] for sublist in
+                               list_joints]).T  # angles are in the indexangleright and indexangleleft indexs
+            right_hand_data = df.iloc[0]
+            right_hand_data = right_hand_data.dropna().to_numpy()
+            left_hand_data = df.iloc[1]
+            left_hand_data = left_hand_data.dropna().to_numpy()
 
-        features = feature_extraction(right_hand_data, left_hand_data)
-        exercise = exercise_name
-        predictions = predict_performance(features, exercise, s.adaptation_model_name)
-        s.performance_class[exercise] = {'right': predictions[0], 'left': predictions[1]}
-        print(f"CAMERA: performance classification {s.performance_class}")
-        plot_data(exercise_name, right_hand_data, left_hand_data)  # only for internal checks comparing plot to classification
+            features = feature_extraction(right_hand_data, left_hand_data)
+            exercise = exercise_name
+            predictions = predict_performance(features, exercise, s.adaptation_model_name)
+            s.performance_class[exercise] = {'right': predictions[0], 'left': predictions[1]}
+            print(f"CAMERA: performance classification {s.performance_class}")
+            plot_data(exercise_name, right_hand_data, left_hand_data)  # only for internal checks comparing plot to classification
+        else:
+            s.performance_class[exercise_name] = {'right': 1, 'left': 1}  # the exercise was not performed enough times
 
     def run(self):
         print("CAMERA START")

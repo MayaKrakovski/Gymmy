@@ -17,6 +17,7 @@ class Training(threading.Thread):
         while not s.waved:
             time.sleep(0.00000001)  # Prevents the MP to stuck
             continue
+        s.waved = False # set as False again for future
         if not s.calibration:
             print("Training: Calibration")
             s.camera.init_position()
@@ -49,15 +50,16 @@ class Training(threading.Thread):
 
         right_values = [value['right'] for value in s.performance_class.values()]
         left_values = [value['left'] for value in s.performance_class.values()]
-        if sum(right_values) > 1.5 and sum(left_values) > 2:
+        if sum(right_values) > 1.1 and sum(left_values) > 1.1:
             print("problem in both hands!")
-        elif sum(left_values) > 1.1:  # In the middle of the exercise provide corrective feedback (for example: try to raise your hand more),
+        elif sum(right_values) > 1.1:  # In the middle of the exercise provide corrective feedback (for example: try to raise your hand more),
             print("problem in right hand!")
         elif sum(left_values) > 1.1:  # problem in left hand!
             print("problem in left hand!")
         else:
             print("no problems!")  # add try again if not succeeded
             s.robot_count = False
+            s.try_again = True
 
         exercise_names = ["raise_arms_bend_elbows", "open_and_close_arms",
                           "open_and_close_arms_90", "raise_arms_forward"]
@@ -67,6 +69,24 @@ class Training(threading.Thread):
             while (not s.poppy_done) or (not s.camera_done):
                 print("not done")
                 time.sleep(1)
+            if s.try_again == True and s.success_exercise == False:
+                print("TRAINING: Try Again")
+                time1 = time.time()
+                time2 = 0
+                s.req_exercise = "hello_waving"
+                time.sleep(2)
+                print("TRAINING: wait for trying again")
+                while not s.waved and (time2 - time1 < 15):
+                    time.sleep(0.00000001)  # Prevents the MP to stuck
+                    time2 = time.time()
+                    continue
+                s.req_exercise = ""
+                if s.waved:
+                    print(f"TRAINING: try again exercise {e}")
+                    s.waved = False  # set as False again for future
+                    self.run_exercise(e)
+
+
 
     def training_session(self):
         print("Training: start exercises")

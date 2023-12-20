@@ -28,13 +28,14 @@ class Poppy(threading.Thread):
         print("ROBOT START")
         while not s.finish_workout:
             time.sleep(0.00000001)  # Prevents the MP to stuck
-            if s.req_exercise != "":
+            if s.req_exercise != "" and not (s.req_exercise=="hello_waving" and s.try_again): # if there is exercise, or hello waving
                 time.sleep(1)
                 print("ROBOT: Exercise ", s.req_exercise, " start")
                 self.exercise_demo(s.req_exercise)
                 print("ROBOT: Exercise ", s.req_exercise, " done")
-                while not s.waved:
-                    time.sleep(0.01)  # for hello_waiting exercise, wait until user wave
+                if not s.calibration: #meaning it's the first hello
+                    while not s.waved:
+                        time.sleep(0.01)  # for hello_waiting exercise, wait until user wave
                 s.req_exercise = ""
                 s.poppy_done = True
         print("Robot Done")
@@ -81,12 +82,12 @@ class Poppy(threading.Thread):
     def bend_elbows(self, counter):
         self.poppy.r_arm[3].goto_position(-60, 1.5, wait=False)
         self.poppy.l_arm[3].goto_position(-60, 1.5, wait=True)
-        time.sleep(2)
+        time.sleep(1.5)
         self.poppy.r_arm[3].goto_position(85, 1.5, wait=False)
         self.poppy.l_arm[3].goto_position(85, 1.5, wait=True)
         if s.robot_count:
             say(str(counter + 1))
-        time.sleep(2)
+        time.sleep(1.5)
 
     # EX3 - Raise Arms Bend Elbows
     def raise_arms_bend_elbows(self, counter):

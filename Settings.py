@@ -21,6 +21,7 @@ def __init__():
     global poppy_done
     global camera_done
     global robot_count
+    global try_again # Adaptive scenario - successful performance
 
     # audio variables
     global audio_path
