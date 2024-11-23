@@ -166,7 +166,7 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-            if s.problem_both and (s.robot_rep >= s.rep/2) and counter <=2 and not said_instructions:
+            if s.corrective_feedback and (s.robot_rep >= s.rep/2) and counter <=2 and not said_instructions:
                 say(exercise_name + "_" + str(flag))
                 said_instructions = True
                 if flag:
@@ -174,10 +174,13 @@ class Camera(threading.Thread):
                 if not flag:
                     print("Corrective feedback false - Try to close your hands more")
         if s.adaptive:
-            if angle_classification == "first":
-                self.classify_performance(list_joints, exercise_name, 12, 13, counter)
-            else:
-                self.classify_performance(list_joints, exercise_name, 14, 15, counter)
+            try:
+                if angle_classification == "first":
+                    self.classify_performance(list_joints, exercise_name, 12, 13, counter)
+                else:
+                    self.classify_performance(list_joints, exercise_name, 14, 15, counter)
+            except:
+                print ("can't do classification")
         if s.one_hand=='right':
             exercise_name = exercise_name[:-9]
         elif s.one_hand=='left':
@@ -222,7 +225,7 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
-            if s.problem_both and (s.robot_rep >= s.rep/2) and counter <=2 and not said_instructions:
+            if s.corrective_feedback and (s.robot_rep >= s.rep/2) and counter <=2 and not said_instructions:
                 said_instructions = True
                 if flag:
                     print("Try to raise your hands more")
@@ -261,8 +264,16 @@ class Camera(threading.Thread):
         self.exercise_two_angles_3d("open_and_close_arms_90", "Wrist", "Elbow", "Shoulder", 60, 150, 60, 150,
                                     "Shoulder", "Shoulder", "Elbow", 140, 180, 80, 120, "second", True)
 
+    def open_and_close_arms_90_one_hand(self):
+        self.exercise_two_angles_3d("open_and_close_arms_90_one_hand", "Wrist", "Elbow", "Shoulder", 60, 150, 60, 150,
+                                    "Shoulder", "Shoulder", "Elbow", 140, 180, 80, 120, "second", True)
+
     def raise_arms_forward(self):
         self.exercise_two_angles_3d("raise_arms_forward", "Wrist", "Shoulder", "Hip", 85, 135, 10, 50,
+                                   "Shoulder", "Shoulder", "Wrist", 80, 115, 80, 115, "first", True)
+
+    def raise_arms_forward_one_hand(self):
+        self.exercise_two_angles_3d("raise_arms_forward_one_hand", "Wrist", "Shoulder", "Hip", 85, 135, 10, 50,
                                    "Shoulder", "Shoulder", "Wrist", 80, 115, 80, 115, "first", True)
 
     def hello_waving(self):  # check if the participant waved
@@ -366,7 +377,7 @@ if __name__ == '__main__':
         s.finish_workout = False
         s.participant_code = "1106"
         s.rep = 2
-        s.problem_both = False
+        s.corrective_feedback = False
         s.one_hand = 'right'
         s.req_exercise = "raise_arms_bend_elbows_one_hand"
         s.robot_count = False

@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     # Adaptation variables
     s.adaptive = True
-    s.problem_both = False
+    s.corrective_feedback = False
     s.one_hand = False
     if s.adaptive:
         s.adaptation_model_name = 'performance_evaluation_model'

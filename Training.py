@@ -52,15 +52,17 @@ class Training(threading.Thread):
         left_values = [value['left'] for value in s.performance_class.values()]
         if sum(right_values) > 1.1 and sum(left_values) > 1.1:
             print("problem in both hands!")
-            s.problem_both = True
+            s.corrective_feedback = True
         elif sum(right_values) > 1.1:  # In the middle of the exercise provide corrective feedback
             # (for example: try to raise your hand more),
             print("problem in right hand!")
             s.one_hand = 'right'
+            s.corrective_feedback = True
             say("adaptive_focused_right")
         elif sum(left_values) > 1.1:  # problem in left hand!
             print("problem in left hand!")
             s.one_hand = 'left'
+            s.corrective_feedback = True
             say("adaptive_focused_left")
         else:
             print("no problems!")  # add try again if not succeeded
@@ -97,7 +99,8 @@ class Training(threading.Thread):
                         self.run_exercise(e)
         else: # training for one hand
             print(f"Training focused on {s.one_hand} hand")
-            one_hand_exercise_names = ["raise_arms_bend_elbows_one_hand", "open_and_close_arms_one_hand"] #to do - add exercises
+            one_hand_exercise_names = ["raise_arms_bend_elbows_one_hand", "open_and_close_arms_one_hand",
+                                       "open_and_close_arms_90_one_hand", "raise_arms_forward_one_hand"] #to do - add exercises
             for e in one_hand_exercise_names:
                 time.sleep(2)  # wait between exercises
                 self.run_exercise(e, "_"+s.one_hand)

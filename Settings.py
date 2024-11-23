@@ -36,5 +36,5 @@ def __init__():
     global adaptation_model
     global adaptive
     global performance_class
-    global problem_both
+    global corrective_feedback
     global one_hand
