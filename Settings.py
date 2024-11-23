@@ -22,6 +22,7 @@ def __init__():
     global camera_done
     global robot_count
     global try_again # Adaptive scenario - successful performance
+    global robot_rep # number of repetition of the robot
 
     # audio variables
     global audio_path
@@ -35,3 +36,4 @@ def __init__():
     global adaptation_model
     global adaptive
     global performance_class
+    global problem_both

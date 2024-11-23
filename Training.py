@@ -28,8 +28,8 @@ class Training(threading.Thread):
         say('lets start')
         time.sleep(2.5)
         print("Training: finish waving")
-        s.poppy_done = False # AFTER HELLO
-        s.camera_done = False # AFTER HELLO
+        s.poppy_done = False  # AFTER HELLO
+        s.camera_done = False  # AFTER HELLO
         if s.adaptive:
             self.adaptive_training_session()
         else:
@@ -52,7 +52,9 @@ class Training(threading.Thread):
         left_values = [value['left'] for value in s.performance_class.values()]
         if sum(right_values) > 1.1 and sum(left_values) > 1.1:
             print("problem in both hands!")
-        elif sum(right_values) > 1.1:  # In the middle of the exercise provide corrective feedback (for example: try to raise your hand more),
+            s.problem_both = True
+        elif sum(right_values) > 1.1:  # In the middle of the exercise provide corrective feedback
+            # (for example: try to raise your hand more),
             print("problem in right hand!")
         elif sum(left_values) > 1.1:  # problem in left hand!
             print("problem in left hand!")
@@ -60,6 +62,7 @@ class Training(threading.Thread):
             print("no problems!")  # add try again if not succeeded
             s.robot_count = False
             s.try_again = True
+            say("adaptive_bothgood")
 
         exercise_names = ["raise_arms_bend_elbows", "open_and_close_arms",
                           "open_and_close_arms_90", "raise_arms_forward"]
@@ -86,8 +89,6 @@ class Training(threading.Thread):
                     s.waved = False  # set as False again for future
                     self.run_exercise(e)
 
-
-
     def training_session(self):
         print("Training: start exercises")
         # TODO - adding random choice of exercises.
@@ -113,7 +114,7 @@ class Training(threading.Thread):
         s.success_exercise = False
         print("TRAINING: Exercise ", name, " start")
         say(name)
-        time.sleep(3)  # Delay the robot movement after the audio is played
+        # time.sleep(3)  # Delay the robot movement after the audio is played
         s.req_exercise = name
         while s.req_exercise == name:
             time.sleep(0.001)  # Prevents the MP to stuck

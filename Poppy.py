@@ -45,9 +45,11 @@ class Poppy(threading.Thread):
             self.hello_waving()
         else:
             for i in range(s.rep):
+                s.robot_rep = i
                 getattr(self, ex)(i)
                 if s.success_exercise:
                     break
+
 
     def hello_waving(self):
         self.poppy.r_shoulder_x.goto_position(-90, 1.5, wait=False)

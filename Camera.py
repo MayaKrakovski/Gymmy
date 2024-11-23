@@ -110,6 +110,7 @@ class Camera(threading.Thread):
                                joint4, joint5, joint6, up_lb2, up_ub2, down_lb2, down_ub2, angle_classification, use_alternate_angles=False):
         flag = True
         counter = 0
+        said_instructions = False
         list_joints = []
         while s.req_exercise == exercise_name:
             joints = self.get_skeleton_data()
@@ -150,6 +151,13 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
+            if s.problem_both and (s.robot_rep >= s.rep/2) and counter <=2 and not said_instructions:
+                say(exercise_name + "_" + str(flag))
+                said_instructions = True
+                if flag:
+                    print("Try to raise your hands more")
+                if not flag:
+                    print("Try to close your hands more")
         if s.adaptive:
             if angle_classification == "first":
                 self.classify_performance(list_joints, exercise_name, 12, 13, counter)
@@ -158,52 +166,11 @@ class Camera(threading.Thread):
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
 
-    def exercise_one_angle(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub,
-                           use_alternate_angles=False):
-        # TODO - remove this function.
-        flag = True
-        counter = 0
-        list_joints = []
-        while s.req_exercise == exercise_name:
-            joints = self.get_skeleton_data()
-            if joints is not None:
-                if use_alternate_angles:
-                    right_angle = self.calc_angle_3d(joints[str("L_" + joint1)], joints[str("R_" + joint2)],
-                                                     joints[str("R_" + joint3)])
-                    left_angle = self.calc_angle_3d(joints[str("R_" + joint1)], joints[str("L_" + joint2)],
-                                                    joints[str("L_" + joint3)])
-                else:
-                    right_angle = self.calc_angle(joints[str("R_" + joint1)], joints[str("R_" + joint2)],
-                                                  joints[str("R_" + joint3)])
-                    left_angle = self.calc_angle(joints[str("L_" + joint1)], joints[str("L_" + joint2)],
-                                                 joints[str("L_" + joint3)])
-
-                new_entry = [joints[str("R_" + joint1)], joints[str("R_" + joint2)], joints[str("R_" + joint3)],
-                             joints[str("L_" + joint1)], joints[str("L_" + joint2)], joints[str("L_" + joint3)],
-                             right_angle, left_angle]
-                list_joints.append(new_entry)
-                if right_angle is not None and left_angle is not None:
-                    if (up_lb < right_angle < up_ub) & (up_lb < left_angle < up_ub) & (not flag):
-                        flag = True
-                        counter += 1
-                        print(counter)
-                        if not s.robot_count:
-                            say(str(counter))
-                    if (down_lb < right_angle < down_ub) & (down_lb < left_angle < down_ub) & (flag):
-                        flag = False
-            if (not s.robot_count) and (counter == s.rep):
-                s.req_exercise = ""
-                s.success_exercise = True
-                break
-        if s.adaptive:
-            self.classify_performance(list_joints, exercise_name, 6, 7, counter)
-        s.ex_list.append([exercise_name, counter])
-        Excel.wf_joints(exercise_name, list_joints)
-
     def exercise_one_angle_3d(self, exercise_name, joint1, joint2, joint3, up_lb, up_ub, down_lb, down_ub,
                               use_alternate_angles=False):
         flag = True
         counter = 0
+        said_instructions = False
         list_joints = []
         while s.req_exercise == exercise_name:
             joints = self.get_skeleton_data()
@@ -236,6 +203,13 @@ class Camera(threading.Thread):
                 s.req_exercise = ""
                 s.success_exercise = True
                 break
+            if s.problem_both and (s.robot_rep >= s.rep/2) and counter <=2 and not said_instructions:
+                said_instructions = True
+                if flag:
+                    print("Try to raise your hands more")
+                if not flag:
+                    print("Try to close your hands more")
+
         if s.adaptive:
             self.classify_performance(list_joints, exercise_name, 6, 7, counter)
         s.ex_list.append([exercise_name, counter])
@@ -246,7 +220,7 @@ class Camera(threading.Thread):
                                     "Shoulder", "Shoulder", "Wrist", 150, 180, 80, 110, "first", True)
 
     def bend_elbows(self):
-        self.exercise_one_angle_3d("bend_elbows", "Shoulder", "Elbow", "Wrist", 150, 180, 10, 50)
+        self.exercise_one_angle_3d("bend_elbows", "Shoulder", "Elbow", "Wrist", 150, 180, 10, 50) #todo change to 2 angles - add armpit
 
     def raise_arms_bend_elbows(self):
         self.exercise_two_angles_3d("raise_arms_bend_elbows", "Shoulder", "Elbow", "Wrist", 130, 180, 10, 70,
