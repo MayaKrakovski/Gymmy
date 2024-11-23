@@ -70,8 +70,6 @@ class Training(threading.Thread):
             s.try_again = True
             say("adaptive_bothgood")
 
-        s.one_hand = 'right' #todo - delete
-
         exercise_names = ["raise_arms_bend_elbows", "open_and_close_arms",
                           "open_and_close_arms_90", "raise_arms_forward"]
         if s.one_hand == False:
@@ -107,6 +105,8 @@ class Training(threading.Thread):
                 while (not s.poppy_done) or (not s.camera_done):
                     print("not done")
                     time.sleep(1)
+
+        #TODO - ADD HERE THE TWO EXERCISES OF THE BEGNING AGAIN.
 
     def training_session(self):
         print("Training: start exercises")
