@@ -52,12 +52,12 @@ def success_worksheet():
     s.worksheet = s.excel_workbook.add_worksheet("performance_class")
     for ex in s.performance_class:
         s.worksheet.write(row, col, ex)
-        if s.performance_class[ex][0] is not None:
-            s.worksheet.write(row, col+1, s.performance_class[ex][0])
+        if s.performance_class[ex]['right'] is not None:
+            s.worksheet.write(row, col+1, s.performance_class[ex]['right'])
         else:
             s.worksheet.write(row, col+1, "nan")
-        if s.performance_class[ex][1] is not None:
-            s.worksheet.write(row, col+2, s.performance_class[ex][1])
+        if s.performance_class[ex]['left'] is not None:
+            s.worksheet.write(row, col+2, s.performance_class[ex]['left'])
         else:
             s.worksheet.write(row, col+2, "nan")
         row += 1

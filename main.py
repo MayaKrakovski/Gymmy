@@ -11,7 +11,6 @@ import pickle
 import datetime
 
 
-
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
@@ -26,7 +25,7 @@ if __name__ == '__main__':
 
     # Audio variables initialization
     language = 'Hebrew'
-    gender = 'Male'
+    gender = 'Female'
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
     s.picture_path = 'audio files/' + language + '/' + gender + '/'
     # s.str_to_say = ""
@@ -36,16 +35,17 @@ if __name__ == '__main__':
 
     # Training variables initialization
     s.exercise_amount = 6
-    s.rep = 8
+    s.rep = 2 #todo change to 8
     s.req_exercise = ""
     s.finish_workout = False
     s.waved = False
     s.success_exercise = False
-    s.calibration = False
+    s.calibration = False # False to have calibration session, True to not have
     s.training_done = False
     s.poppy_done = False
     s.camera_done = False
     s.robot_count = True
+    s.try_again = False
     # Excel variable
     Excel.create_workbook()
     s.ex_list = []
@@ -57,8 +57,10 @@ if __name__ == '__main__':
 
     # Adaptation variables
     s.adaptive = True
+    s.corrective_feedback = False
+    s.one_hand = False
     if s.adaptive:
-        s.adaptation_model_name = 'model2'
+        s.adaptation_model_name = 'performance_evaluation_model'
         s.performance_class = {}
         # s.adaptation_model = pickle.load(open(f'{adaptation_model_name}.sav', 'rb'))
 

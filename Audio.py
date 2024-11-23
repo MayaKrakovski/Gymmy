@@ -31,16 +31,18 @@ def say(str_to_say):
     :return: audio
     '''
     mixer.init()
-    mixer.music.load(s.audio_path+str_to_say+'.wav')
-    mixer.music.play()
+    sound = mixer.Sound(s.audio_path+str_to_say+'.wav')
+    audio_length = sound.get_length()
+    sound.play()
+    time.sleep(audio_length-1)
 
 
 if __name__ == '__main__':
     language = 'Hebrew'
-    gender = 'Female'
+    gender = 'female'
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
 
     # audio = Audio()
     # audio.say('raise arms forward')
-    say("calibration")
+    say("adaptive_focused_left")
     time.sleep(5)

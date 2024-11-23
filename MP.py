@@ -6,6 +6,7 @@ import threading
 import cv2
 import mediapipe as mp
 import Settings as s
+import time
 
 
 class MP(threading.Thread):
@@ -16,6 +17,7 @@ class MP(threading.Thread):
 
     def run(self):
         print("MP START")
+        recorded_data = []
         show = True
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
@@ -98,7 +100,16 @@ class MP(threading.Thread):
                     s.finish_workout = True
                     break
 
+                recorded_data.append({
+                    'timestamp': time.time(),
+                    'json_message': message
+                })
+
             cap.release()
+
+            # Save recorded data to a JSON file
+            with open('recorded_data2.json', 'w') as f:
+                json.dump(recorded_data, f)
 
 
 if __name__ == '__main__':

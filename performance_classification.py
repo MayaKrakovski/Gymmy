@@ -250,6 +250,7 @@ def plot_data(exercise_name, right_hand_data, left_hand_data):
     plt.savefig(s.participant_code+exercise_name+'.png')
     # plt.show()
 
+
 if __name__ == "__main__":
 
     path = r'C:\Users\mayak\PycharmProjects\DataAnalysis\CSV\Raw Data\maya_bend_elbows.csv'
