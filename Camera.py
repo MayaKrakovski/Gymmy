@@ -135,7 +135,7 @@ class Camera(threading.Thread):
                              joints[str("L_" + joint4)], joints[str("L_" + joint5)], joints[str("L_" + joint6)],
                              right_angle, left_angle, right_angle2, left_angle2]
                 list_joints.append(new_entry)
-                if s.one_hand != 'False':
+                if s.one_hand != False:
                     if s.one_hand == 'right':
                         if not flag:
                             left_angle = up_ub-1
@@ -148,8 +148,8 @@ class Camera(threading.Thread):
                             right_angle = up_ub-1
                             right_angle2 = up_ub2-1
                         else:
-                            left_angle = down_ub-1
-                            left_angle2 = down_ub2-1
+                            right_angle = down_ub-1
+                            right_angle2 = down_ub2-1
                 if right_angle is not None and left_angle is not None and \
                         right_angle2 is not None and left_angle2 is not None:
                     if (up_lb < right_angle < up_ub) & (up_lb < left_angle < up_ub) & \
@@ -226,6 +226,7 @@ class Camera(threading.Thread):
                 s.success_exercise = True
                 break
             if s.corrective_feedback and (s.robot_rep >= s.rep/2) and counter <=2 and not said_instructions:
+                say(exercise_name + "_" + str(flag))
                 said_instructions = True
                 if flag:
                     print("Try to raise your hands more")
@@ -339,7 +340,7 @@ class Camera(threading.Thread):
             features = feature_extraction(right_hand_data, left_hand_data)
             exercise = exercise_name
             predictions = predict_performance(features, exercise, s.adaptation_model_name)
-            s.performance_class[exercise] = {'right': predictions[0], 'left': predictions[1]}
+            s.performance_class[exercise] = {'right': predictions[1], 'left': predictions[0]}
             print(f"CAMERA: performance classification {s.performance_class}")
             plot_data(exercise_name, right_hand_data, left_hand_data)  # only for internal checks comparing plot to classification
         else:
