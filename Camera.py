@@ -135,6 +135,21 @@ class Camera(threading.Thread):
                              joints[str("L_" + joint4)], joints[str("L_" + joint5)], joints[str("L_" + joint6)],
                              right_angle, left_angle, right_angle2, left_angle2]
                 list_joints.append(new_entry)
+                if s.one_hand != 'False':
+                    if s.one_hand == 'right':
+                        if not flag:
+                            left_angle = up_ub-1
+                            left_angle2 = up_ub2-1
+                        else:
+                            left_angle = down_ub-1
+                            left_angle2 = down_ub2-1
+                    else: # s.one_hand = left
+                        if not flag:
+                            right_angle = up_ub-1
+                            right_angle2 = up_ub2-1
+                        else:
+                            left_angle = down_ub-1
+                            left_angle2 = down_ub2-1
                 if right_angle is not None and left_angle is not None and \
                         right_angle2 is not None and left_angle2 is not None:
                     if (up_lb < right_angle < up_ub) & (up_lb < left_angle < up_ub) & \
@@ -155,14 +170,18 @@ class Camera(threading.Thread):
                 say(exercise_name + "_" + str(flag))
                 said_instructions = True
                 if flag:
-                    print("Try to raise your hands more")
+                    print("Corrective feedback true - Try to raise your hands more")
                 if not flag:
-                    print("Try to close your hands more")
+                    print("Corrective feedback false - Try to close your hands more")
         if s.adaptive:
             if angle_classification == "first":
                 self.classify_performance(list_joints, exercise_name, 12, 13, counter)
             else:
                 self.classify_performance(list_joints, exercise_name, 14, 15, counter)
+        if s.one_hand=='right':
+            exercise_name = exercise_name[:-9]
+        elif s.one_hand=='left':
+            exercise_name = exercise_name[:-9]
         s.ex_list.append([exercise_name, counter])
         Excel.wf_joints(exercise_name, list_joints)
 
@@ -226,8 +245,16 @@ class Camera(threading.Thread):
         self.exercise_two_angles_3d("raise_arms_bend_elbows", "Shoulder", "Elbow", "Wrist", 130, 180, 10, 70,
                                     "Elbow", "Shoulder", "Hip", 60, 105, 60, 105, "first")
 
+    def raise_arms_bend_elbows_one_hand(self):
+        self.exercise_two_angles_3d("raise_arms_bend_elbows_one_hand", "Shoulder", "Elbow", "Wrist", 130, 180, 10, 70,
+                                    "Elbow", "Shoulder", "Hip", 60, 105, 60, 105, "first")
+
     def open_and_close_arms(self):
         self.exercise_two_angles_3d("open_and_close_arms",  "Hip", "Shoulder", "Wrist", 80, 150, 80, 150,
+                                   "Shoulder", "Shoulder", "Wrist", 90, 120, 150, 175, "second",  True)
+
+    def open_and_close_arms_one_hand(self):
+        self.exercise_two_angles_3d("open_and_close_arms_one_hand",  "Hip", "Shoulder", "Wrist", 80, 150, 80, 150,
                                    "Shoulder", "Shoulder", "Wrist", 90, 120, 150, 175, "second",  True)
 
     def open_and_close_arms_90(self):
@@ -339,7 +366,9 @@ if __name__ == '__main__':
         s.finish_workout = False
         s.participant_code = "1106"
         s.rep = 2
-        s.req_exercise = "bend_elbows"
+        s.problem_both = False
+        s.one_hand = 'right'
+        s.req_exercise = "raise_arms_bend_elbows_one_hand"
         s.robot_count = False
         Excel.create_workbook()
         s.ex_list = []

@@ -44,5 +44,5 @@ if __name__ == '__main__':
 
     # audio = Audio()
     # audio.say('raise arms forward')
-    say("adaptive_bothgood")
+    say("adaptive_focused_left")
     time.sleep(5)

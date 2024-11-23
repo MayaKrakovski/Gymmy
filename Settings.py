@@ -37,3 +37,4 @@ def __init__():
     global adaptive
     global performance_class
     global problem_both
+    global one_hand

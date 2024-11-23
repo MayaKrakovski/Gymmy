@@ -56,38 +56,54 @@ class Training(threading.Thread):
         elif sum(right_values) > 1.1:  # In the middle of the exercise provide corrective feedback
             # (for example: try to raise your hand more),
             print("problem in right hand!")
+            s.one_hand = 'right'
+            say("adaptive_focused_right")
         elif sum(left_values) > 1.1:  # problem in left hand!
             print("problem in left hand!")
+            s.one_hand = 'left'
+            say("adaptive_focused_left")
         else:
             print("no problems!")  # add try again if not succeeded
             s.robot_count = False
             s.try_again = True
             say("adaptive_bothgood")
 
+        s.one_hand = 'right' #todo - delete
+
         exercise_names = ["raise_arms_bend_elbows", "open_and_close_arms",
                           "open_and_close_arms_90", "raise_arms_forward"]
-        for e in exercise_names:
-            time.sleep(2)  # wait between exercises
-            self.run_exercise(e)
-            while (not s.poppy_done) or (not s.camera_done):
-                print("not done")
-                time.sleep(1)
-            if s.try_again == True and s.success_exercise == False:
-                print("TRAINING: Try Again")
-                time1 = time.time()
-                time2 = 0
-                s.req_exercise = "hello_waving"
-                time.sleep(2)
-                print("TRAINING: wait for trying again")
-                while not s.waved and (time2 - time1 < 15):
-                    time.sleep(0.00000001)  # Prevents the MP to stuck
-                    time2 = time.time()
-                    continue
-                s.req_exercise = ""
-                if s.waved:
-                    print(f"TRAINING: try again exercise {e}")
-                    s.waved = False  # set as False again for future
-                    self.run_exercise(e)
+        if s.one_hand == False:
+            for e in exercise_names:
+                time.sleep(2)  # wait between exercises
+                self.run_exercise(e)
+                while (not s.poppy_done) or (not s.camera_done):
+                    print("not done")
+                    time.sleep(1)
+                if s.try_again == True and s.success_exercise == False: # for
+                    print("TRAINING: Try Again")
+                    time1 = time.time()
+                    time2 = 0
+                    s.req_exercise = "hello_waving"
+                    time.sleep(2)
+                    print("TRAINING: wait for trying again")
+                    while not s.waved and (time2 - time1 < 15):
+                        time.sleep(0.00000001)  # Prevents the MP to stuck
+                        time2 = time.time()
+                        continue
+                    s.req_exercise = ""
+                    if s.waved:
+                        print(f"TRAINING: try again exercise {e}")
+                        s.waved = False  # set as False again for future
+                        self.run_exercise(e)
+        else: # training for one hand
+            print(f"Training focused on {s.one_hand} hand")
+            one_hand_exercise_names = ["raise_arms_bend_elbows_one_hand", "open_and_close_arms_one_hand"] #to do - add exercises
+            for e in one_hand_exercise_names:
+                time.sleep(2)  # wait between exercises
+                self.run_exercise(e, "_"+s.one_hand)
+                while (not s.poppy_done) or (not s.camera_done):
+                    print("not done")
+                    time.sleep(1)
 
     def training_session(self):
         print("Training: start exercises")
@@ -110,10 +126,10 @@ class Training(threading.Thread):
         s.screen.quit()
         print("TRAINING DONE")
 
-    def run_exercise(self, name):
+    def run_exercise(self, name, hand=''):
         s.success_exercise = False
         print("TRAINING: Exercise ", name, " start")
-        say(name)
+        say(name+hand)
         # time.sleep(3)  # Delay the robot movement after the audio is played
         s.req_exercise = name
         while s.req_exercise == name:

@@ -118,6 +118,38 @@ class Poppy(threading.Thread):
             self.poppy.l_shoulder_x.goto_position(0, 1.5, wait=False)
             self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False)
 
+    # EX3 - Raise Arms Bend Elbows One Hand
+    def raise_arms_bend_elbows_one_hand(self, counter):
+        if s.one_hand == 'right': # mirror demo
+            l_hand = [self.poppy.l_shoulder_y.goto_position(-90, 2, wait=False),
+                      self.poppy.l_arm_z.goto_position(-90, 2, wait=False),
+                      self.poppy.l_shoulder_x.goto_position(50, 2, wait=False),
+                      self.poppy.l_elbow_y.goto_position(-50, 2, wait=False)]
+            time.sleep(2)
+            self.poppy.l_shoulder_x.goto_position(95, 1.5, wait=False)
+            self.poppy.l_elbow_y.goto_position(90, 1.5, wait=True)
+        else:
+            r_hand = [self.poppy.r_shoulder_y.goto_position(-90, 2, wait=False),
+                      self.poppy.r_arm_z.goto_position(90, 2, wait=False),
+                      self.poppy.r_shoulder_x.goto_position(-50, 2, wait=False),
+                      self.poppy.r_elbow_y.goto_position(-50, 2, wait=False)]
+            time.sleep(2)
+            self.poppy.r_shoulder_x.goto_position(-85, 1.5, wait=False)
+            self.poppy.r_elbow_y.goto_position(90, 1.5, wait=False)
+        if s.robot_count:
+            say(str(counter + 1))
+        time.sleep(2)
+        if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
+            # return to init position
+            if s.one_hand == 'right': # mirror demo
+                self.poppy.l_arm_z.goto_position(0, 1.5, wait=False)
+                self.poppy.l_shoulder_y.goto_position(0, 1.5, wait=False)
+                self.poppy.l_shoulder_x.goto_position(0, 1.5, wait=False)
+            else:
+                self.poppy.r_arm_z.goto_position(0, 1.5, wait=False)
+                self.poppy.r_shoulder_y.goto_position(0, 1.5, wait=True)
+                self.poppy.r_shoulder_x.goto_position(0, 1.5, wait=False)
+
     # Ex4 - open and close arms
     def open_and_close_arms(self, counter):
         if counter == 0:
@@ -138,6 +170,33 @@ class Poppy(threading.Thread):
             self.poppy.r_shoulder_y.goto_position(0, 2, wait=False)
             self.poppy.l_shoulder_x.goto_position(0, 2, wait=False)
             self.poppy.r_shoulder_x.goto_position(0, 2, wait=True)
+
+    # Ex4 - open and close arms - one hand
+    def open_and_close_arms_one_hand(self, counter):
+        if counter == 0:
+            if s.one_hand == 'right':  # mirror demo
+                self.poppy.l_shoulder_y.goto_position(-90, 2, wait=False)
+            else:
+                self.poppy.r_shoulder_y.goto_position(-90, 2, wait=False)
+        if s.one_hand == 'right':
+            self.poppy.l_shoulder_x.goto_position(95, 1.5, wait=False)
+            time.sleep(2)
+            self.poppy.l_shoulder_x.goto_position(0, 2, wait=False)
+        else:
+            self.poppy.r_shoulder_x.goto_position(-85, 1.5, wait=False)
+            time.sleep(2)
+            self.poppy.r_shoulder_x.goto_position(0, 2, wait=True)
+        if s.robot_count:
+            say(str(counter + 1))
+        time.sleep(2)
+        if counter >= s.rep-1 or s.success_exercise:  # TODO - Change to something that works if it finished before 8 repetitions.
+            if s.one_hand == 'right':
+                self.poppy.l_shoulder_y.goto_position(0, 2, wait=False)
+                self.poppy.l_shoulder_x.goto_position(0, 2, wait=False)
+
+            else:
+                self.poppy.r_shoulder_y.goto_position(0, 2, wait=False)
+                self.poppy.r_shoulder_x.goto_position(0, 2, wait=True)
 
     # EX5 - open and close arms 90
     def open_and_close_arms_90(self, counter):
@@ -183,6 +242,7 @@ if __name__ == "__main__":
     s.robot_count = True
     s.success_exercise = False
     s.finish_workout = False
+    s.one_hand = 'right'
     language = 'Hebrew'
     gender = 'Male'
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
@@ -190,7 +250,7 @@ if __name__ == "__main__":
     robot = Poppy()
 
     # robot.exercise_demo("open_and_close_arms_90")
-    robot.exercise_demo("raise_arms_forward")
+    robot.exercise_demo("open_and_close_arms_one_hand")
     # robot.start()
     time.sleep(10)
 
