@@ -107,6 +107,18 @@ class Training(threading.Thread):
                     time.sleep(1)
 
         #TODO - ADD HERE THE TWO EXERCISES OF THE BEGNING AGAIN.
+        s.one_hand = False
+        print("TRAINING: repeat_first_exercises")
+        say("repeat_first_exercises")
+        exercise_names = ["raise_arms_horizontally", "bend_elbows"]
+        for e in exercise_names:
+            time.sleep(2)
+            self.run_exercise(e)
+            while (not s.poppy_done) or (not s.camera_done):
+                print("not done")
+                time.sleep(1)
+            s.poppy_done = False
+            s.camera_done = False
 
     def training_session(self):
         print("Training: start exercises")
