@@ -6,6 +6,7 @@ from scipy.fft import fft, fftfreq
 from scipy.signal import butter, filtfilt, argrelextrema
 import matplotlib.pyplot as plt
 import Settings as s
+import datetime
 
 
 def repetition_features(data, hand, framepersec):
@@ -247,7 +248,8 @@ def plot_data(exercise_name, right_hand_data, left_hand_data):
     plt.plot(left_hand_data, label="left hand")
     plt.xlabel("Frame")
     plt.ylabel("Angle Degree")
-    plt.savefig(s.participant_code+exercise_name+'.png')
+    current_time = datetime.datetime.now()
+    plt.savefig(s.participant_code+exercise_name++ str(current_time.minute) + str(current_time.second)+'.png')
     # plt.show()
 
 
