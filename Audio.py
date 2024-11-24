@@ -39,10 +39,10 @@ def say(str_to_say):
 
 if __name__ == '__main__':
     language = 'Hebrew'
-    gender = 'female'
+    gender = 'male'
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
 
     # audio = Audio()
     # audio.say('raise arms forward')
-    say("adaptive_focused_left")
+    say("open_and_close_arms_90_one_hand_false")
     time.sleep(5)
