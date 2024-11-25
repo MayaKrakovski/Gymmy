@@ -180,8 +180,8 @@ class Camera(threading.Thread):
                     self.classify_performance(list_joints, exercise_name, 12, 13, counter)
                 else:
                     self.classify_performance(list_joints, exercise_name, 14, 15, counter)
-            except:
-                print ("can't do classification")
+            except Exception as e:
+                print (f"can't do classification {e}")
         if s.one_hand=='right':
             exercise_name = exercise_name[:-9]
         elif s.one_hand=='left':

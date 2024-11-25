@@ -249,7 +249,7 @@ def plot_data(exercise_name, right_hand_data, left_hand_data):
     plt.xlabel("Frame")
     plt.ylabel("Angle Degree")
     current_time = datetime.datetime.now()
-    plt.savefig(s.participant_code+exercise_name++ str(current_time.minute) + str(current_time.second)+'.png')
+    plt.savefig(s.participant_code+exercise_name+str(current_time.minute) + str(current_time.second)+'.png')
     # plt.show()
 
 
