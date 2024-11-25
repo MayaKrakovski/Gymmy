@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     # Audio variables initialization
     language = 'Hebrew'
-    gender = 'Female'
+    gender = 'Male'
     s.audio_path = 'audio files/' + language + '/' + gender + '/'
     s.picture_path = 'audio files/' + language + '/' + gender + '/'
     # s.str_to_say = ""
