@@ -160,4 +160,30 @@ class Training(threading.Thread):
 
 
 if __name__ == "__main__":
+    # Create all components
+    from Camera import Camera
+    from Poppy import Poppy
+
+    s.camera = Camera()
+    s.robot = Poppy()
+    language = 'Hebrew'
+    gender = 'Male'
+    s.audio_path = 'audio files/' + language + '/' + gender + '/'
+    s.finish_workout = False
+    s.rep = 8 #todo change to 8
+    s.req_exercise = ""
+    s.robot_count = True
+
+    # Adaptation variables
+    s.adaptive = True
+    s.corrective_feedback = True
+    s.one_hand = False
+    s.robot_rep = 0
+    if s.adaptive:
+        s.adaptation_model_name = 'performance_evaluation_model'
+        s.performance_class = {}
+    s.camera.start()
+    s.robot.start()
+
     t = Training()
+    t.run_exercise("open_and_close_arms_90")
